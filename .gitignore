@@ -1,1 +1,4 @@
-node_modules\ndist\n.vercel\n.playwright-mcp
+node_modules
+dist
+.vercel
+.playwright-mcp

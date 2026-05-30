@@ -660,7 +660,7 @@ function CourseAdder({ activeBuild, addToBuild, setBuildSection, takenSlotsByTyp
                         if (sections.length > 1) setBuildSection(activeBuild.id, course.id, sched.section)
                       }
                       return (
-                        <div key={course.id + '-' + (sched.section ?? 'only')} style={{
+                        <div key={course.id + '-' + (sched.section ?? 'only') + '-' + (sched.weekday ?? sched.dayType)} style={{
                           display: 'flex', alignItems: 'center', gap: '0.625rem',
                           padding: '0.5rem 0.75rem',
                           background: taken ? '#fff7ed' : '#f9fafb',
@@ -965,7 +965,7 @@ function CourseSidebar({ activeBuild, addToBuild, setBuildSection, semester, tak
                   const taken = (takenSlotsByType[sched.dayType]?.get(sched.timeSlot) ?? []).some(qt => qTermsOverlap(qt, sched.qTerm))
                   return (
                     <div
-                      key={course.id + '-' + (sched.section ?? 'only')}
+                      key={course.id + '-' + (sched.section ?? 'only') + '-' + (sched.weekday ?? sched.dayType)}
                       draggable
                       onDragStart={(e) => handleDragStart(e, item)}
                       onDragEnd={() => onDragEndItem?.()}

@@ -11,7 +11,17 @@ function migrateBuilds(builds) {
 }
 
 function generateCode() {
-  return Math.random().toString(36).slice(2, 6) + '-' + Math.random().toString(36).slice(2, 6)
+  // The sync code is the ONLY thing protecting a user's saved builds (there is
+  // no auth), so it must be high-entropy and fixed-length to make enumeration
+  // infeasible. crypto.getRandomValues over an unambiguous alphabet, ~82 bits.
+  const alphabet = 'abcdefghijkmnpqrstuvwxyz23456789' // no 0/o/1/l to avoid confusion
+  const bytes = crypto.getRandomValues(new Uint8Array(16))
+  let out = ''
+  for (let i = 0; i < bytes.length; i++) {
+    if (i > 0 && i % 4 === 0) out += '-'
+    out += alphabet[bytes[i] % alphabet.length]
+  }
+  return out
 }
 
 function loadLocal() {

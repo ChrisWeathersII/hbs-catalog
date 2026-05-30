@@ -1368,10 +1368,14 @@ export const UNITS = [
 // ── Section data ─────────────────────────────────────────────────────────────
 // Each course maps to an array of available sections, since most popular HBS
 // courses run multiple sections at different times.
-// Section shape: { section, dayType, weekday, timeSlot, qTerm, faculty }
+// Section shape: { section, dayType, weekday, weekdays?, timeSlot, qTerm, faculty }
 //   section:   '01' / '02' / null  (null = single-section course)
 //   dayType:   'X' (Mon/Tue) | 'Y' (Thu/Fri) | 'W' (Wed-only)
 //   weekday:   null = rotates Mon↔Tue or Thu↔Fri | 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI'
+//   weekdays:  optional array — section meets EVERY weekday in the array each week
+//              (e.g. Crafting Your Life meets both Mon AND Tue). When set, the schedule
+//              view expands the section into one block per weekday. `weekday` should
+//              be set to the first entry for backwards compat with non-schedule UIs.
 //   timeSlot:  'HH:MM-HH:MM' (24-hour)
 //   qTerm:     'Q1' | 'Q2' | 'Q1Q2'
 //   faculty:   short instructor name(s)
@@ -1424,9 +1428,9 @@ export const COURSE_SECTIONS = {
     { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Foley' },
     { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Foley' },
   ],
-  'ee22c766': [ // Crafting Your Life (also has Wed 4–6pm plenary)
-    { section: '01', dayType: 'X', weekday: 'TUE', timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Perlow' },
-    { section: '02', dayType: 'X', weekday: 'TUE', timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Perlow' },
+  'ee22c766': [ // Crafting Your Life — each section meets BOTH Mon AND Tue every week (also has Wed 4–6pm plenary)
+    { section: '01', dayType: 'X', weekday: 'TUE', weekdays: ['MON', 'TUE'], timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Perlow' },
+    { section: '02', dayType: 'X', weekday: 'TUE', weekdays: ['MON', 'TUE'], timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Perlow' },
   ],
   '0f273725': [ // Launching Tech Ventures (AI)
     { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Bussgang' },

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { CalendarDays, AlertTriangle, X, Plus, ChevronDown, ChevronUp, Download, Repeat, Search, GripVertical, Palette } from 'lucide-react'
+import { CalendarDays, AlertTriangle, X, Plus, ChevronDown, ChevronUp, Download, Repeat, Search, GripVertical, Palette, SlidersHorizontal } from 'lucide-react'
 import { COURSES, getCourseSections, getActiveSection } from '../data/hbsCourses'
 
 // ── Time geometry ─────────────────────────────────────────────────────────────
@@ -1045,7 +1045,9 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
   const [semester, setSemester]             = useState('Fall')  // 'Fall' | 'Spring'
   const [quarter, setQuarter]               = useState('all')    // 'all' | Q1/Q2 (Fall) | S1/S2 (Spring)
   const [meetingPattern, setMeetingPattern] = useState('all')    // 'all' | 'once' | 'rotating'
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const isMobile = useIsMobile()
+  const filterCount = (semester !== 'Fall' ? 1 : 0) + (quarter !== 'all' ? 1 : 0) + (meetingPattern !== 'all' ? 1 : 0)
 
   const activeBuild = buildId === 'all' ? null : builds.find(b => b.id === buildId)
   const courseIdSet = activeBuild ? new Set(activeBuild.courseIds) : null
@@ -1285,11 +1287,31 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
                 <Download size={14} /> {isMobile ? '' : 'Calendar'}
               </button>
             )}
+            {isMobile && (
+              <button onClick={() => setFiltersOpen(o => !o)} title="Show filters" aria-label="Show filters"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '0.3rem',
+                  padding: '0.55rem 0.7rem',
+                  border: `1px solid ${filtersOpen || filterCount > 0 ? '#A41034' : '#e5e7eb'}`,
+                  borderRadius: '0.5rem',
+                  background: filtersOpen || filterCount > 0 ? '#fff1f2' : '#fff',
+                  color: filtersOpen || filterCount > 0 ? '#A41034' : '#374151',
+                  fontSize: '0.875rem', fontFamily: 'inherit', cursor: 'pointer', fontWeight: 600,
+                  flexShrink: 0,
+                }}>
+                <SlidersHorizontal size={14} />
+                {filterCount > 0 && (
+                  <span style={{ fontSize: '0.7rem', background: '#A41034', color: '#fff', borderRadius: 10, padding: '0.05rem 0.4rem', fontWeight: 700 }}>
+                    {filterCount}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Filters — semester + quarter + pattern in one row */}
-        <div style={{ display: 'flex', gap: '0.875rem', marginBottom: '0.625rem', alignItems: 'center', flexWrap: 'wrap', rowGap: '0.5rem' }}>
+        {/* Filters — semester + quarter + pattern in one row. Hidden on mobile when collapsed. */}
+        <div style={{ display: isMobile && !filtersOpen ? 'none' : 'flex', gap: '0.875rem', marginBottom: '0.625rem', alignItems: 'center', flexWrap: 'wrap', rowGap: '0.5rem' }}>
           {/* Semester */}
           <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
             <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600 }}>Semester:</span>

@@ -1,32 +1,102 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { supabase } from '../lib/supabase'
 
 const STORAGE_KEY = 'hbs_course_builds'
-const DEFAULT_BUILD = { id: 'wishlist', name: 'My Wishlist', createdAt: new Date().toISOString(), courseIds: [] }
+const SYNC_CODE_KEY = 'hbs_sync_code'
+const DEFAULT_BUILD = { id: 'wishlist', name: 'My Wishlist', createdAt: new Date().toISOString(), courseIds: [], sections: {}, notes: {}, colors: {} }
 
-function load() {
+// Migrate old builds that don't have `sections`, `notes`, or `colors` fields
+function migrateBuilds(builds) {
+  return builds.map(b => ({ ...b, sections: b.sections ?? {}, notes: b.notes ?? {}, colors: b.colors ?? {} }))
+}
+
+function generateCode() {
+  return Math.random().toString(36).slice(2, 6) + '-' + Math.random().toString(36).slice(2, 6)
+}
+
+function loadLocal() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const parsed = JSON.parse(stored)
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      if (Array.isArray(parsed) && parsed.length > 0) return migrateBuilds(parsed)
     }
   } catch {}
   return [{ ...DEFAULT_BUILD }]
 }
 
-function persist(builds) {
+function persistLocal(builds) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(builds))
 }
 
 export function useCourseBuilds() {
-  const [builds, setBuilds] = useState(load)
+  const [builds, setBuildsRaw] = useState(loadLocal)
+  const [syncCode] = useState(() => {
+    let code = localStorage.getItem(SYNC_CODE_KEY)
+    if (!code) {
+      code = generateCode()
+      localStorage.setItem(SYNC_CODE_KEY, code)
+    }
+    return code
+  })
+  const [syncStatus, setSyncStatus] = useState('loading')
+  const saveTimer = useRef(null)
+
+  // Load from Supabase on mount — cloud is source of truth
+  useEffect(() => {
+    if (!supabase) { setSyncStatus('offline'); return }
+    supabase
+      .from('hbs_builds')
+      .select('builds')
+      .eq('sync_code', syncCode)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (error) { setSyncStatus('error'); return }
+        if (data?.builds && Array.isArray(data.builds) && data.builds.length > 0) {
+          const migrated = migrateBuilds(data.builds)
+          setBuildsRaw(migrated)
+          persistLocal(migrated)
+        }
+        setSyncStatus('synced')
+      })
+  }, [syncCode])
+
+  const saveToCloud = useCallback((newBuilds) => {
+    if (!supabase) return
+    setSyncStatus('syncing')
+    clearTimeout(saveTimer.current)
+    saveTimer.current = setTimeout(async () => {
+      const { error } = await supabase
+        .from('hbs_builds')
+        .upsert({ sync_code: syncCode, builds: newBuilds, updated_at: new Date().toISOString() })
+      setSyncStatus(error ? 'error' : 'synced')
+    }, 600)
+  }, [syncCode])
 
   const update = useCallback((nextOrFn) => {
-    setBuilds(prev => {
+    setBuildsRaw(prev => {
       const next = typeof nextOrFn === 'function' ? nextOrFn(prev) : nextOrFn
-      persist(next)
+      persistLocal(next)
+      saveToCloud(next)
       return next
     })
+  }, [saveToCloud])
+
+  // Enter a sync code from another device to pull its builds
+  const linkDevice = useCallback(async (code) => {
+    const clean = code.trim().toLowerCase()
+    if (!clean || !supabase) return { success: false, error: 'Invalid code' }
+    const { data, error } = await supabase
+      .from('hbs_builds')
+      .select('builds')
+      .eq('sync_code', clean)
+      .maybeSingle()
+    if (error || !data) return { success: false, error: 'Code not found. Make sure you have saved at least one build on the other device first.' }
+    const migrated = migrateBuilds(data.builds)
+    localStorage.setItem(SYNC_CODE_KEY, clean)
+    setBuildsRaw(migrated)
+    persistLocal(migrated)
+    return { success: true }
   }, [])
 
   const createBuild = useCallback((name) => {
@@ -35,51 +105,82 @@ export function useCourseBuilds() {
       name: name.trim() || 'Untitled Build',
       createdAt: new Date().toISOString(),
       courseIds: [],
+      sections: {},
+      notes: {},
+      colors: {},
     }
     update(prev => [...prev, build])
     return build.id
   }, [update])
 
-  const deleteBuild = useCallback((buildId) => {
-    update(prev => prev.filter(b => b.id !== buildId))
-  }, [update])
-
-  const renameBuild = useCallback((buildId, name) => {
-    update(prev => prev.map(b => b.id === buildId ? { ...b, name: name.trim() || b.name } : b))
-  }, [update])
+  const deleteBuild    = useCallback((id)       => update(prev => prev.filter(b => b.id !== id)), [update])
+  const renameBuild    = useCallback((id, name) => update(prev => prev.map(b => b.id === id ? { ...b, name: name.trim() || b.name } : b)), [update])
 
   const addToBuild = useCallback((courseId, buildId) => {
     update(prev => prev.map(b =>
       b.id === buildId && !b.courseIds.includes(courseId)
-        ? { ...b, courseIds: [...b.courseIds, courseId] }
-        : b
+        ? { ...b, courseIds: [...b.courseIds, courseId] } : b
     ))
   }, [update])
 
   const removeFromBuild = useCallback((courseId, buildId) => {
-    update(prev => prev.map(b =>
-      b.id === buildId
-        ? { ...b, courseIds: b.courseIds.filter(id => id !== courseId) }
-        : b
-    ))
+    update(prev => prev.map(b => {
+      if (b.id !== buildId) return b
+      const { [courseId]: _s, ...sectionsRest } = b.sections ?? {}
+      const { [courseId]: _n, ...notesRest    } = b.notes    ?? {}
+      const { [courseId]: _c, ...colorsRest   } = b.colors   ?? {}
+      return {
+        ...b,
+        courseIds: b.courseIds.filter(id => id !== courseId),
+        sections: sectionsRest,
+        notes:    notesRest,
+        colors:   colorsRest,
+      }
+    }))
   }, [update])
 
-  const isInAnyBuild = useCallback((courseId) => {
-    return builds.some(b => b.courseIds.includes(courseId))
-  }, [builds])
+  // Choose / change which section of a course a build uses
+  const setBuildSection = useCallback((buildId, courseId, sectionId) => {
+    update(prev => prev.map(b => {
+      if (b.id !== buildId) return b
+      const next = { ...(b.sections ?? {}) }
+      if (sectionId == null) delete next[courseId]
+      else next[courseId] = sectionId
+      return { ...b, sections: next }
+    }))
+  }, [update])
 
-  const getBuildIdsForCourse = useCallback((courseId) => {
-    return builds.filter(b => b.courseIds.includes(courseId)).map(b => b.id)
-  }, [builds])
+  // Override the auto-assigned color for a course within a build. paletteIdx is
+  // an integer (index into the PALETTE in ScheduleView) or null/undefined to reset.
+  const setBuildCourseColor = useCallback((buildId, courseId, paletteIdx) => {
+    update(prev => prev.map(b => {
+      if (b.id !== buildId) return b
+      const next = { ...(b.colors ?? {}) }
+      if (paletteIdx == null) delete next[courseId]
+      else next[courseId] = paletteIdx
+      return { ...b, colors: next }
+    }))
+  }, [update])
+
+  // Per-course free-text note in a build (e.g. "must-take", "backup", "heard great things")
+  const setBuildNote = useCallback((buildId, courseId, note) => {
+    update(prev => prev.map(b => {
+      if (b.id !== buildId) return b
+      const next = { ...(b.notes ?? {}) }
+      const trimmed = (note ?? '').trim()
+      if (!trimmed) delete next[courseId]
+      else next[courseId] = trimmed
+      return { ...b, notes: next }
+    }))
+  }, [update])
+
+  const isInAnyBuild       = useCallback((courseId) => builds.some(b => b.courseIds.includes(courseId)), [builds])
+  const getBuildIdsForCourse = useCallback((courseId) => builds.filter(b => b.courseIds.includes(courseId)).map(b => b.id), [builds])
 
   return {
-    builds,
-    createBuild,
-    deleteBuild,
-    renameBuild,
-    addToBuild,
-    removeFromBuild,
-    isInAnyBuild,
-    getBuildIdsForCourse,
+    builds, syncCode, syncStatus, linkDevice,
+    createBuild, deleteBuild, renameBuild,
+    addToBuild, removeFromBuild, setBuildSection, setBuildNote, setBuildCourseColor,
+    isInAnyBuild, getBuildIdsForCourse,
   }
 }

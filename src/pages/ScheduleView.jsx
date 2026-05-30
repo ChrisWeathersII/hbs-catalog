@@ -1218,10 +1218,10 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
 
   return (
     <div style={{ background: '#f9f7f6', minHeight: 'calc(100vh - 56px)' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: isMobile ? '1.25rem 0.75rem 2rem' : '1.75rem 1.5rem 3rem' }}>
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: isMobile ? '1.25rem 0.75rem 2rem' : '1.25rem 1.5rem 3rem' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap' }}>
               <CalendarDays size={isMobile ? 18 : 22} style={{ color: '#A41034' }} />
@@ -1288,75 +1288,79 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
           </div>
         </div>
 
-        {/* Semester toggle */}
-        <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '0.625rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600, marginRight: '0.25rem' }}>Semester:</span>
-          {[
-            ['Fall',   'Fall 2026'],
-            ['Spring', 'Spring 2027'],
-          ].map(([val, lbl]) => (
-            <button key={val} onClick={() => setSemester(val)}
-              style={{
-                padding: '0.35rem 0.875rem', borderRadius: 20,
-                border: `1px solid ${semester === val ? '#A41034' : '#e5e7eb'}`,
-                background: semester === val ? '#fff1f2' : '#fff',
-                color: semester === val ? '#A41034' : '#6b7280',
-                fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-              }}>{lbl}</button>
-          ))}
+        {/* Filters — semester + quarter + pattern in one row */}
+        <div style={{ display: 'flex', gap: '0.875rem', marginBottom: '0.625rem', alignItems: 'center', flexWrap: 'wrap', rowGap: '0.5rem' }}>
+          {/* Semester */}
+          <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600 }}>Semester:</span>
+            {[
+              ['Fall',   isMobile ? 'Fall'   : 'Fall 2026'],
+              ['Spring', isMobile ? 'Spring' : 'Spring 2027'],
+            ].map(([val, lbl]) => (
+              <button key={val} onClick={() => setSemester(val)}
+                style={{
+                  padding: '0.3rem 0.75rem', borderRadius: 20,
+                  border: `1px solid ${semester === val ? '#A41034' : '#e5e7eb'}`,
+                  background: semester === val ? '#fff1f2' : '#fff',
+                  color: semester === val ? '#A41034' : '#6b7280',
+                  fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                }}>{lbl}</button>
+            ))}
+          </div>
+
+          {/* Quarter */}
+          <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600 }}>Show:</span>
+            {[
+              ['all',   isMobile ? 'Both' : (semester === 'Fall' ? 'Both quarters' : 'Both halves'), '#374151'],
+              [Q_HALF1, isMobile ? Q_HALF1 : `${Q_HALF1} only`, QUARTER_COLOR[Q_HALF1]],
+              [Q_HALF2, isMobile ? Q_HALF2 : `${Q_HALF2} only`, QUARTER_COLOR[Q_HALF2]],
+            ].map(([val, lbl, color]) => (
+              <button key={val} onClick={() => setQuarter(val)}
+                style={{
+                  padding: '0.3rem 0.75rem', borderRadius: 20,
+                  border: `1px solid ${quarter === val ? color : '#e5e7eb'}`,
+                  background: quarter === val ? `${color}15` : '#fff',
+                  color: quarter === val ? color : '#6b7280',
+                  fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                }}>{lbl}</button>
+            ))}
+          </div>
+
+          {/* Meeting pattern */}
+          <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600 }}>Pattern:</span>
+            {[
+              ['all',      isMobile ? 'All'      : 'All meetings',                       '#374151'],
+              ['once',     isMobile ? 'Weekly'   : 'Once per week',                      '#0891b2'],
+              ['rotating', isMobile ? 'Rotating' : 'Rotating Mon/Tue or Thu/Fri',        '#7c3aed'],
+            ].map(([val, lbl, color]) => (
+              <button key={val} onClick={() => setMeetingPattern(val)}
+                title={
+                  val === 'once'     ? 'Fixed-weekday courses (War & Peace, IFCs, late-day seminars)' :
+                  val === 'rotating' ? 'Standard electives that alternate between Mon/Tue or Thu/Fri' :
+                  'Show all meeting patterns'
+                }
+                style={{
+                  padding: '0.3rem 0.75rem', borderRadius: 20,
+                  border: `1px solid ${meetingPattern === val ? color : '#e5e7eb'}`,
+                  background: meetingPattern === val ? `${color}15` : '#fff',
+                  color: meetingPattern === val ? color : '#6b7280',
+                  fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+                }}>{lbl}</button>
+            ))}
+          </div>
+
           {semester === 'Spring' && !isMobile && (
-            <span style={{ fontSize: '0.7rem', color: '#9ca3af', marginLeft: '0.5rem' }}>
+            <span style={{ fontSize: '0.7rem', color: '#9ca3af', flexBasis: '100%' }}>
               Note: Spring schedule data is best-guess pending the official Spring 2027 timetable.
             </span>
           )}
-        </div>
-
-        {/* Quarter toggle */}
-        <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '0.875rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600, marginRight: '0.25rem' }}>Show:</span>
-          {[
-            ['all',   isMobile ? 'Both' : (semester === 'Fall' ? 'Both quarters' : 'Both halves'), '#374151'],
-            [Q_HALF1, isMobile ? Q_HALF1 : `${Q_HALF1} only`, QUARTER_COLOR[Q_HALF1]],
-            [Q_HALF2, isMobile ? Q_HALF2 : `${Q_HALF2} only`, QUARTER_COLOR[Q_HALF2]],
-          ].map(([val, lbl, color]) => (
-            <button key={val} onClick={() => setQuarter(val)}
-              style={{
-                padding: '0.3rem 0.75rem', borderRadius: 20,
-                border: `1px solid ${quarter === val ? color : '#e5e7eb'}`,
-                background: quarter === val ? `${color}15` : '#fff',
-                color: quarter === val ? color : '#6b7280',
-                fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-              }}>{lbl}</button>
-          ))}
           {!isMobile && (
             <span style={{ fontSize: '0.7rem', color: '#9ca3af', marginLeft: 'auto' }}>
               Dashed = alternates weekly · Hover a block to remove or switch sections
             </span>
           )}
-        </div>
-
-        {/* Meeting pattern toggle */}
-        <div style={{ display: 'flex', gap: '0.375rem', marginBottom: '0.875rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.78rem', color: '#6b7280', fontWeight: 600, marginRight: '0.25rem' }}>Pattern:</span>
-          {[
-            ['all',      isMobile ? 'All'      : 'All meetings',                       '#374151'],
-            ['once',     isMobile ? 'Weekly'   : 'Once per week',                      '#0891b2'],
-            ['rotating', isMobile ? 'Rotating' : 'Rotating Mon/Tue or Thu/Fri',        '#7c3aed'],
-          ].map(([val, lbl, color]) => (
-            <button key={val} onClick={() => setMeetingPattern(val)}
-              title={
-                val === 'once'     ? 'Fixed-weekday courses (War & Peace, IFCs, late-day seminars)' :
-                val === 'rotating' ? 'Standard electives that alternate between Mon/Tue or Thu/Fri' :
-                'Show all meeting patterns'
-              }
-              style={{
-                padding: '0.3rem 0.75rem', borderRadius: 20,
-                border: `1px solid ${meetingPattern === val ? color : '#e5e7eb'}`,
-                background: meetingPattern === val ? `${color}15` : '#fff',
-                color: meetingPattern === val ? color : '#6b7280',
-                fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
-              }}>{lbl}</button>
-          ))}
         </div>
 
         {/* Calendar + (desktop) sidebar */}

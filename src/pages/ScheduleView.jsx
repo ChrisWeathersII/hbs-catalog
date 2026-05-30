@@ -7,7 +7,7 @@ import { COURSES, getCourseSections, getActiveSection } from '../data/hbsCourses
 const T_START = 8 * 60 + 30      // 8:30 AM
 const T_END   = 19 * 60          // 7:00 PM
 const T_RANGE = T_END - T_START  // 630 min
-const PX_PER_MIN = 1.4           // ~880px tall
+const PX_PER_MIN = 0.85          // ~535px tall — full day fits in most laptop viewports
 const GRID_HEIGHT = T_RANGE * PX_PER_MIN
 
 const toMin = (s) => { const [h, m] = s.split(':').map(Number); return h * 60 + m }

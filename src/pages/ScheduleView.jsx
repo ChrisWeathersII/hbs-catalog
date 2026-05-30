@@ -1089,6 +1089,15 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
       .filter(({ sched }) => matchesSemester(sched.qTerm) && matchesQuarter(sched.qTerm) && matchesPattern(sched))
   }, [buildId, builds, quarter, semester, meetingPattern, activeBuild])
 
+  // Actual weekly meeting count. A weekday: null X-day or Y-day course meets
+  // twice per week (renders in both columns); fixed-weekday sections meet once.
+  const meetingsPerWeek = useMemo(() => {
+    return scheduled.reduce((sum, { sched }) => {
+      const renderedColumns = sched.weekday ? 1 : (sched.dayType === 'W' ? 1 : 2)
+      return sum + renderedColumns
+    }, 0)
+  }, [scheduled])
+
   // Courses in this build that don't have any scheduling data, OR whose
   // scheduled sections all fall in the OTHER semester from the one being viewed.
   const unscheduled = useMemo(() => {
@@ -1235,7 +1244,7 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
               </span>
             </div>
             <div style={{ fontSize: '0.8125rem', color: '#6b7280', marginTop: 5, display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-              <span>{scheduled.length} class meeting{scheduled.length !== 1 ? 's' : ''}</span>
+              <span>{meetingsPerWeek} class meeting{meetingsPerWeek !== 1 ? 's' : ''}</span>
               {activeBuild && (
                 <>
                   <span>·</span>

@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, Plus, Check, Bookmark, X, Repeat, Calendar } from 'lucide-react'
+import { Search, Plus, Check, Bookmark, X, Repeat, Calendar, SlidersHorizontal } from 'lucide-react'
 import { COURSES, UNITS, getCourseSchedule, getCourseSections } from '../data/hbsCourses'
 
 const TERMS = ['All terms', 'Fall 2026', 'Spring 2027']
@@ -294,6 +294,8 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
     window.addEventListener('resize', h)
     return () => window.removeEventListener('resize', h)
   }, [])
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const activeFilterCount = (unit !== 'All units' ? 1 : 0) + (term !== 'All terms' ? 1 : 0) + (credits !== 'Any credits' ? 1 : 0) + (dayFilter !== 'All' ? 1 : 0) + assessmentFilter.size + (multiOnly ? 1 : 0) + onceWeeklyDays.size
 
   const toggleAssessment = (type) => {
     setAssessmentFilter(prev => {
@@ -349,32 +351,72 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
       <div style={{ maxWidth: 1140, margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
 
         {/* Header */}
-        <div style={{ marginBottom: '1.75rem' }}>
-          <h1 style={{ fontSize: '1.625rem', fontWeight: 800, margin: '0 0 0.375rem', color: '#111827', letterSpacing: '-0.02em' }}>Elective Catalog</h1>
-          <p style={{ margin: 0, fontSize: '0.9rem', color: '#6b7280' }}>Every HBS elective in one place. Save courses to builds to plan your schedule.</p>
+        <div style={{ marginBottom: isMobile ? '0.875rem' : '1.75rem' }}>
+          <h1 style={{ fontSize: isMobile ? '1.375rem' : '1.625rem', fontWeight: 800, margin: '0 0 0.25rem', color: '#111827', letterSpacing: '-0.02em' }}>Elective Catalog</h1>
+          {!isMobile && (
+            <p style={{ margin: 0, fontSize: '0.9rem', color: '#6b7280' }}>Every HBS elective in one place. Save courses to builds to plan your schedule.</p>
+          )}
         </div>
 
-        {/* Row 1: Search + unit + term + credits */}
-        <div style={{ display: 'flex', gap: '0.625rem', marginBottom: '0.625rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ position: 'relative', flex: '1 1 260px', minWidth: 200 }}>
+        {/* Row 1: Search + (mobile: Filters toggle) + (desktop: unit + term + credits) */}
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 0 }}>
             <Search size={14} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none' }} />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search courses, faculty, areas…"
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder={isMobile ? 'Search…' : 'Search courses, faculty, areas…'}
               style={{ ...selectStyle, width: '100%', paddingLeft: 32, boxSizing: 'border-box' }} />
           </div>
-          <select value={unit}    onChange={e => setUnit(e.target.value)}    style={selectStyle}>
-            <option>All units</option>
-            {UNITS.map(u => <option key={u}>{u}</option>)}
-          </select>
-          <select value={term}    onChange={e => setTerm(e.target.value)}    style={selectStyle}>
-            {TERMS.map(t => <option key={t}>{t}</option>)}
-          </select>
-          <select value={credits} onChange={e => setCredits(e.target.value)} style={selectStyle}>
-            {CREDITS.map(c => <option key={c}>{c}</option>)}
-          </select>
+          {isMobile ? (
+            <button onClick={() => setFiltersOpen(o => !o)}
+              style={{
+                ...selectStyle, display: 'flex', alignItems: 'center', gap: '0.3rem',
+                padding: '0.5rem 0.75rem',
+                background: filtersOpen || activeFilterCount > 0 ? '#fff1f2' : '#fff',
+                borderColor: filtersOpen || activeFilterCount > 0 ? '#A41034' : '#e5e7eb',
+                color: filtersOpen || activeFilterCount > 0 ? '#A41034' : '#374151',
+                fontWeight: 600,
+              }}>
+              <SlidersHorizontal size={14} />
+              Filters
+              {activeFilterCount > 0 && (
+                <span style={{ fontSize: '0.7rem', background: '#A41034', color: '#fff', borderRadius: 10, padding: '0.05rem 0.4rem', fontWeight: 700 }}>
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          ) : (
+            <>
+              <select value={unit}    onChange={e => setUnit(e.target.value)}    style={selectStyle}>
+                <option>All units</option>
+                {UNITS.map(u => <option key={u}>{u}</option>)}
+              </select>
+              <select value={term}    onChange={e => setTerm(e.target.value)}    style={selectStyle}>
+                {TERMS.map(t => <option key={t}>{t}</option>)}
+              </select>
+              <select value={credits} onChange={e => setCredits(e.target.value)} style={selectStyle}>
+                {CREDITS.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </>
+          )}
         </div>
 
-        {/* Row 2: Day filter + Assessment filter pills */}
-        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        {/* Mobile-only: dropdowns inside collapsible panel */}
+        {isMobile && filtersOpen && (
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+            <select value={unit}    onChange={e => setUnit(e.target.value)}    style={{ ...selectStyle, flex: '1 1 100%' }}>
+              <option>All units</option>
+              {UNITS.map(u => <option key={u}>{u}</option>)}
+            </select>
+            <select value={term}    onChange={e => setTerm(e.target.value)}    style={{ ...selectStyle, flex: '1 1 calc(50% - 0.25rem)' }}>
+              {TERMS.map(t => <option key={t}>{t}</option>)}
+            </select>
+            <select value={credits} onChange={e => setCredits(e.target.value)} style={{ ...selectStyle, flex: '1 1 calc(50% - 0.25rem)' }}>
+              {CREDITS.map(c => <option key={c}>{c}</option>)}
+            </select>
+          </div>
+        )}
+
+        {/* Row 2: Day filter + Assessment filter pills — hidden on mobile when filters collapsed */}
+        <div style={{ display: isMobile && !filtersOpen ? 'none' : 'flex', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
           {/* Day filter — segmented pills */}
           <div style={{ display: 'flex', gap: '0.25rem', background: '#f3f4f6', borderRadius: '0.5rem', padding: '0.2rem' }}>
             {dayOptions.map(({ value, label, title }) => (

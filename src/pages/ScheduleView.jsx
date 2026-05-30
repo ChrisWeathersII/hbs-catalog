@@ -1074,22 +1074,15 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
   // Resolve sections; co-meeting courses (multiple section-less entries) plot every entry.
   const scheduled = useMemo(() => {
     const buildSections = activeBuild?.sections ?? null
-    // A section with `weekdays: [...]` meets on every listed weekday each week
-    // (e.g. Crafting Your Life: Mon AND Tue). Expand into one item per weekday
-    // so each meeting gets its own block in the calendar column.
-    const expand = (course, sched, sections) => {
-      const days = sched.weekdays && sched.weekdays.length > 0 ? sched.weekdays : [sched.weekday]
-      return days.map(wd => ({ course, sched: { ...sched, weekday: wd }, sections }))
-    }
     return COURSES
       .filter(c => courseIdSet ? courseIdSet.has(c.id) : true)
       .flatMap(c => {
         const sections = getCourseSections(c.id)
         if (sections.length === 0) return []
         const isCoMeeting = sections.length > 1 && sections.every(s => s.section == null)
-        if (isCoMeeting) return sections.flatMap(sched => expand(c, sched, sections))
+        if (isCoMeeting) return sections.map(sched => ({ course: c, sched, sections }))
         const sched = buildSections ? getActiveSection(c.id, buildSections) : sections[0]
-        return sched ? expand(c, sched, sections) : []
+        return sched ? [{ course: c, sched, sections }] : []
       })
       .filter(({ sched }) => matchesSemester(sched.qTerm) && matchesQuarter(sched.qTerm) && matchesPattern(sched))
   }, [buildId, builds, quarter, semester, meetingPattern, activeBuild])

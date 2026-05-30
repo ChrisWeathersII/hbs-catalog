@@ -342,7 +342,6 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
   const dayOptions = [
     { value: 'All', label: isMobile ? 'All' : 'All days',    title: 'All days' },
     { value: 'X',   label: isMobile ? 'X'   : 'X (Mon/Tue)', title: 'X day — Mon/Tue' },
-    { value: 'W',   label: isMobile ? 'W'   : 'W (Wed)',     title: 'W day — Wed' },
     { value: 'Y',   label: isMobile ? 'Y'   : 'Y (Thu/Fri)', title: 'Y day — Thu/Fri' },
   ]
 
@@ -432,7 +431,6 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
                 }}>
                 {value === 'X' ? <><span style={{ color: '#1d4ed8' }}>●</span> {label}</> :
                  value === 'Y' ? <><span style={{ color: '#15803d' }}>●</span> {label}</> :
-                 value === 'W' ? <><span style={{ color: '#b45309' }}>●</span> {label}</> :
                  label}
               </button>
             ))}

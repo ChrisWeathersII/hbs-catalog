@@ -287,6 +287,7 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
   const [dayFilter, setDayFilter] = useState('All')
   const [assessmentFilter, setAssessmentFilter] = useState(new Set())
   const [multiOnly, setMultiOnly] = useState(false)
+  const [popularOnly, setPopularOnly] = useState(false)
   const [onceWeeklyDays, setOnceWeeklyDays] = useState(new Set())
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 640)
   useEffect(() => {
@@ -295,7 +296,7 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
     return () => window.removeEventListener('resize', h)
   }, [])
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const activeFilterCount = (unit !== 'All units' ? 1 : 0) + (term !== 'All terms' ? 1 : 0) + (credits !== 'Any credits' ? 1 : 0) + (dayFilter !== 'All' ? 1 : 0) + assessmentFilter.size + (multiOnly ? 1 : 0) + onceWeeklyDays.size
+  const activeFilterCount = (unit !== 'All units' ? 1 : 0) + (term !== 'All terms' ? 1 : 0) + (credits !== 'Any credits' ? 1 : 0) + (dayFilter !== 'All' ? 1 : 0) + assessmentFilter.size + (multiOnly ? 1 : 0) + (popularOnly ? 1 : 0) + onceWeeklyDays.size
 
   const toggleAssessment = (type) => {
     setAssessmentFilter(prev => {
@@ -330,12 +331,13 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
     list = list.filter(c => matchesDay(c, dayFilter))
     list = list.filter(c => matchesAssessment(c, assessmentFilter))
     if (multiOnly) list = list.filter(c => getCourseSections(c.id).length > 1)
+    if (popularOnly) list = list.filter(c => c.popular)
     list = list.filter(c => matchesOnceWeeklyDays(c, onceWeeklyDays))
     return list
-  }, [search, unit, term, credits, dayFilter, assessmentFilter, multiOnly, onceWeeklyDays])
+  }, [search, unit, term, credits, dayFilter, assessmentFilter, multiOnly, popularOnly, onceWeeklyDays])
 
-  const hasFilters = search || unit !== 'All units' || term !== 'All terms' || credits !== 'Any credits' || dayFilter !== 'All' || assessmentFilter.size > 0 || multiOnly || onceWeeklyDays.size > 0
-  const clearFilters = () => { setSearch(''); setUnit('All units'); setTerm('All terms'); setCredits('Any credits'); setDayFilter('All'); setAssessmentFilter(new Set()); setMultiOnly(false); setOnceWeeklyDays(new Set()) }
+  const hasFilters = search || unit !== 'All units' || term !== 'All terms' || credits !== 'Any credits' || dayFilter !== 'All' || assessmentFilter.size > 0 || multiOnly || popularOnly || onceWeeklyDays.size > 0
+  const clearFilters = () => { setSearch(''); setUnit('All units'); setTerm('All terms'); setCredits('Any credits'); setDayFilter('All'); setAssessmentFilter(new Set()); setMultiOnly(false); setPopularOnly(false); setOnceWeeklyDays(new Set()) }
 
   const selectStyle = { padding: '0.5rem 0.875rem', border: '1px solid #e5e7eb', borderRadius: '0.5rem', background: '#fff', color: '#111827', fontSize: '0.875rem', fontFamily: 'inherit', cursor: 'pointer', outline: 'none' }
 
@@ -470,6 +472,21 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
             }}>
             <span style={{ fontSize: '0.7rem', fontFamily: 'monospace', opacity: 0.8 }}>§§</span>
             Multi-section only
+          </button>
+
+          {/* Popular filter — high-demand courses flagged in data */}
+          <button onClick={() => setPopularOnly(o => !o)}
+            title="Only show courses flagged as popular (high-demand electives)"
+            style={{
+              padding: '0.3rem 0.625rem', borderRadius: '20px',
+              border: `1px solid ${popularOnly ? '#A41034' : '#e5e7eb'}`,
+              background: popularOnly ? '#fff1f2' : '#fff',
+              color: popularOnly ? '#A41034' : '#6b7280',
+              fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit',
+              display: 'flex', alignItems: 'center', gap: '0.3rem',
+            }}>
+            <span style={{ fontSize: '0.85rem' }}>🔥</span>
+            Popular only
           </button>
 
           {/* Once-weekly filter — pick specific fixed-weekday seminar days (Tue late, Wed War & Peace, Thu IFCs) */}

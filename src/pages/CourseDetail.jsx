@@ -54,10 +54,10 @@ function SaveMenu({ courseId, builds, addToBuild, getBuildIdsForCourse, createBu
   }
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
+    <div ref={ref} style={{ position: 'relative', flexShrink: 0, marginLeft: 'auto' }}>
       <button onClick={() => setOpen(o => !o)} style={{
         display: 'flex', alignItems: 'center', gap: '0.4rem',
-        padding: '0.5rem 1rem',
+        padding: '0.5rem 1rem', whiteSpace: 'nowrap',
         background: isSaved ? '#fff1f2' : '#A41034',
         border: isSaved ? '1px solid #fecdd3' : 'none',
         borderRadius: '0.5rem',
@@ -301,8 +301,8 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
           )}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem' }}>
-          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.875rem', fontWeight: 600, lineHeight: 1.15, margin: 0, color: '#111827', letterSpacing: '-0.012em' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.875rem 1rem', marginBottom: '0.75rem' }}>
+          <h1 style={{ flex: '1 1 280px', fontFamily: 'var(--font-serif)', fontSize: '1.875rem', fontWeight: 600, lineHeight: 1.15, margin: 0, color: '#111827', letterSpacing: '-0.012em' }}>
             {course.title}
           </h1>
           <SaveMenu courseId={course.id} builds={builds} addToBuild={addToBuild}

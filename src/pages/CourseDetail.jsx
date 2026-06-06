@@ -163,7 +163,7 @@ function SectionsBlock({ courseId, sections, builds, setBuildSection, getBuildId
                   color: dayColor, background: '#fff',
                   border: `1px solid ${dayColor}33`,
                   borderRadius: 4, padding: '2px 6px',
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--font-mono)',
                 }}>
                   §{s.section}
                 </span>
@@ -218,7 +218,7 @@ function SectionsBlock({ courseId, sections, builds, setBuildSection, getBuildId
                             fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
                             display: 'flex', alignItems: 'center', gap: 4,
                           }}>
-                          <span style={{ fontFamily: 'monospace', opacity: 0.7 }}>§{s.section}</span>
+                          <span style={{ fontFamily: 'var(--font-mono)', opacity: 0.7 }}>§{s.section}</span>
                           {fmtSlot(s.timeSlot)}{s.faculty ? ` · ${s.faculty.split(';')[0]}` : ''}
                         </button>
                       )
@@ -302,7 +302,7 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
         </div>
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, lineHeight: 1.2, margin: 0, color: '#111827', letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.875rem', fontWeight: 600, lineHeight: 1.15, margin: 0, color: '#111827', letterSpacing: '-0.012em' }}>
             {course.title}
           </h1>
           <SaveMenu courseId={course.id} builds={builds} addToBuild={addToBuild}
@@ -347,7 +347,7 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
 
         <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.75rem', overflow: 'hidden' }}>
           <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #f3f4f6' }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700, margin: 0, color: '#111827' }}>About this course</h2>
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.125rem', fontWeight: 600, margin: 0, color: '#111827' }}>About this course</h2>
           </div>
           <div style={{ padding: '1.25rem 1.5rem' }}>
             {loading ? (

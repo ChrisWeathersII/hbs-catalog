@@ -358,7 +358,7 @@ function SyncPanel({ syncCode, syncStatus, linkDevice }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
             <code style={{
               fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.08em',
-              color: 'var(--crimson)', fontFamily: 'monospace',
+              color: 'var(--crimson)', fontFamily: 'var(--font-mono)',
             }}>
               {syncCode}
             </code>
@@ -403,7 +403,7 @@ function SyncPanel({ syncCode, syncStatus, linkDevice }) {
               onKeyDown={e => e.key === 'Enter' && handleLink()}
               placeholder="xxxx-xxxx"
               style={{
-                padding: '0.5rem 0.75rem', fontSize: '0.9rem', fontFamily: 'monospace',
+                padding: '0.5rem 0.75rem', fontSize: '0.9rem', fontFamily: 'var(--font-mono)',
                 border: '1px solid var(--color-border)', borderRadius: 'var(--radius)',
                 background: 'var(--color-surface)', color: 'var(--color-fg)',
                 outline: 'none', width: 160,
@@ -450,7 +450,7 @@ export default function CourseBuilds({ builds, createBuild, deleteBuild, renameB
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.25rem' }}>
             <BookMarked size={22} style={{ color: 'var(--crimson)' }} />
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>My Builds</h1>
+            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.625rem', fontWeight: 600, margin: 0, letterSpacing: '-0.012em' }}>My Builds</h1>
           </div>
           <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-fg-muted)' }}>
             {builds.length} build{builds.length !== 1 ? 's' : ''} · {totalCourses} course{totalCourses !== 1 ? 's' : ''} saved

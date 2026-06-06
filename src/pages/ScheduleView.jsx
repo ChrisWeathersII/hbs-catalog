@@ -514,7 +514,7 @@ function MobileDayList({ column, items, colorOverrides, onRemove, onSwitchSectio
                         {fmtTime(startTime)} – {fmtTime(endTime)}
                       </span>
                       {sched.section && (
-                        <span style={{ fontFamily: 'monospace', color: '#9ca3af', fontWeight: 600 }}>§{sched.section}</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', color: '#9ca3af', fontWeight: 600 }}>§{sched.section}</span>
                       )}
                       {sched.qTerm !== 'Q1Q2' && sched.qTerm !== 'S1S2' && (
                         <span style={{ color: QUARTER_COLOR[sched.qTerm], fontWeight: 700 }}>· {sched.qTerm}</span>
@@ -680,7 +680,7 @@ function CourseAdder({ activeBuild, addToBuild, setBuildSection, takenSlotsByTyp
                               fontSize: '0.65rem', fontWeight: 800, flexShrink: 0,
                               color: '#374151', background: '#fff',
                               border: '1px solid #e5e7eb',
-                              borderRadius: 3, padding: '1px 5px', fontFamily: 'monospace',
+                              borderRadius: 3, padding: '1px 5px', fontFamily: 'var(--font-mono)',
                             }}>§{sched.section}</span>
                           )}
                           {sched.qTerm !== 'Q1Q2' && (
@@ -991,7 +991,7 @@ function CourseSidebar({ activeBuild, addToBuild, setBuildSection, semester, tak
                         }}>
                           {course.title}
                           {sched.section && (
-                            <span style={{ marginLeft: 4, fontSize: '0.62rem', fontWeight: 700, color: '#9ca3af', fontFamily: 'monospace' }}>
+                            <span style={{ marginLeft: 4, fontSize: '0.62rem', fontWeight: 700, color: '#9ca3af', fontFamily: 'var(--font-mono)' }}>
                               §{sched.section}
                             </span>
                           )}
@@ -1236,7 +1236,7 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap' }}>
               <CalendarDays size={isMobile ? 18 : 22} style={{ color: '#A41034' }} />
-              <h1 style={{ fontSize: isMobile ? '1.25rem' : '1.5rem', fontWeight: 800, margin: 0, color: '#111827', letterSpacing: '-0.02em' }}>
+              <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: isMobile ? '1.375rem' : '1.625rem', fontWeight: 600, margin: 0, color: '#111827', letterSpacing: '-0.012em' }}>
                 Weekly Schedule
               </h1>
               <span style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 600 }}>

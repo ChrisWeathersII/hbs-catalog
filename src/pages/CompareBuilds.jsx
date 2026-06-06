@@ -264,7 +264,7 @@ export default function CompareBuilds({ builds, removeFromBuild, addToBuild, set
       <div style={{ background: '#f9f7f6', minHeight: 'calc(100vh - 56px)' }}>
         <div style={{ maxWidth: 700, margin: '0 auto', padding: '2.5rem 1.5rem', textAlign: 'center' }}>
           <GitCompareArrows size={36} style={{ color: '#A41034', marginBottom: '0.75rem' }} />
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Compare builds</h1>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.625rem', fontWeight: 600, margin: 0, letterSpacing: '-0.012em' }}>Compare builds</h1>
           <p style={{ color: '#6b7280', marginTop: '0.5rem' }}>
             You need at least two builds to compare. Create another build, then return here.
           </p>
@@ -287,7 +287,7 @@ export default function CompareBuilds({ builds, removeFromBuild, addToBuild, set
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.5rem' }}>
           <GitCompareArrows size={22} style={{ color: '#A41034' }} />
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0, letterSpacing: '-0.02em' }}>Compare builds</h1>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.625rem', fontWeight: 600, margin: 0, letterSpacing: '-0.012em' }}>Compare builds</h1>
         </div>
         <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0 0 1.25rem' }}>
           Pick two builds to see them side-by-side: stats, schedule overlap, and which courses are unique to each.
@@ -511,7 +511,7 @@ function SchedPill({ sched, accent, sectionsCount }) {
       {sched.weekday ? ` ${sched.weekday[0] + sched.weekday.slice(1).toLowerCase()}` : ''}
       {' · '}{sched.timeSlot}
       {sched.section && sectionsCount > 1 && (
-        <span style={{ opacity: 0.7, marginLeft: 4, fontFamily: 'monospace' }}>§{sched.section}</span>
+        <span style={{ opacity: 0.7, marginLeft: 4, fontFamily: 'var(--font-mono)' }}>§{sched.section}</span>
       )}
       {sched.qTerm !== 'Q1Q2' && (
         <span style={{ marginLeft: 4, fontWeight: 800, fontSize: '0.65rem', color: QUARTER_COLOR[sched.qTerm] }}>{sched.qTerm}</span>

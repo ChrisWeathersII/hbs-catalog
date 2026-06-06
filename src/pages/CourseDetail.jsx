@@ -142,8 +142,8 @@ function SectionsBlock({ courseId, sections, builds, setBuildSection, getBuildId
       background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.75rem',
       padding: '1rem 1.25rem', marginBottom: '1.25rem',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', fontWeight: 700, color: '#111827', marginBottom: '0.75rem' }}>
-        <Clock size={15} style={{ color: '#6b7280' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'var(--font-serif)', fontSize: '1.125rem', fontWeight: 600, color: '#111827', marginBottom: '0.75rem' }}>
+        <Clock size={16} style={{ color: '#6b7280' }} />
         {isMulti ? `${sections.length} sections available` : 'Meeting times'}
       </div>
 

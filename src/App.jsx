@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import { useCourseBuilds } from './hooks/useCourseBuilds'
 import CourseCatalog from './pages/CourseCatalog'
@@ -8,73 +7,31 @@ import ScheduleView from './pages/ScheduleView'
 import CompareBuilds from './pages/CompareBuilds'
 import { BookOpen, BookMarked, CalendarDays, GitCompareArrows } from 'lucide-react'
 
+const LINKS = [
+  { to: '/courses',  label: 'Courses',   Icon: BookOpen },
+  { to: '/builds',   label: 'My Builds', Icon: BookMarked },
+  { to: '/schedule', label: 'Schedule',  Icon: CalendarDays },
+  { to: '/compare',  label: 'Compare',   Icon: GitCompareArrows },
+]
+
 function Nav() {
-  // Under 768px we collapse labels and only show icons — keeps all 4 routes
-  // visible on phones (including larger Pro Max devices and accessibility zoom)
-  // without horizontal overflow.
-  const [compact, setCompact] = useState(typeof window !== 'undefined' && window.innerWidth < 768)
-  useEffect(() => {
-    const h = () => setCompact(window.innerWidth < 768)
-    window.addEventListener('resize', h)
-    return () => window.removeEventListener('resize', h)
-  }, [])
-
-  const linkStyle = ({ isActive }) => ({
-    display: 'flex', alignItems: 'center', gap: compact ? 0 : '0.375rem',
-    padding: compact ? '0.4rem 0.55rem' : '0.375rem 0.625rem',
-    borderRadius: 'var(--radius-sm)',
-    fontSize: '0.9rem', fontWeight: 600,
-    textDecoration: 'none',
-    color: isActive ? '#fff' : 'rgba(255,255,255,0.75)',
-    background: isActive ? 'rgba(255,255,255,0.18)' : 'transparent',
-    transition: 'all 0.15s',
-  })
-
   return (
-    <header style={{
-      background: 'var(--crimson)',
-      borderBottom: '1px solid var(--crimson-dark)',
-      position: 'sticky', top: 0, zIndex: 50,
-    }}>
-      <div style={{
-        maxWidth: 1100, margin: '0 auto',
-        padding: compact ? '0 0.75rem' : '0 1.5rem',
-        display: 'flex', alignItems: 'center', gap: compact ? '0.625rem' : '1.5rem',
-        height: 56,
-      }}>
-        {/* Logo */}
-        <NavLink to="/courses"
-          style={{
-            textDecoration: 'none',
-            display: 'flex', flexDirection: 'column', lineHeight: 1.1,
-            marginRight: compact ? 0 : '0.5rem',
-            flexShrink: 0,
-          }}
-          aria-label="HBS Electives — Home"
-        >
-          <span style={{ fontWeight: 800, fontSize: compact ? '0.875rem' : '1rem', color: '#fff', letterSpacing: '-0.01em' }}>
-            HBS Electives
+    <header className="nav">
+      <div className="nav__inner">
+        <NavLink to="/courses" className="brand" aria-label="HBS Electives — Home">
+          <span className="brand__mark">H</span>
+          <span className="brand__text">
+            <span className="brand__name">HBS Electives</span>
+            <span className="brand__sub">AY 2026–2027</span>
           </span>
-          {!compact && (
-            <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.6)', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-              AY 2026–2027
-            </span>
-          )}
         </NavLink>
-
-        <nav style={{ display: 'flex', gap: compact ? '0.125rem' : '0.25rem', marginLeft: compact ? 'auto' : 0 }}>
-          <NavLink to="/courses" style={linkStyle} title="Courses" aria-label="Courses">
-            <BookOpen size={compact ? 18 : 15} /> {!compact && 'Courses'}
-          </NavLink>
-          <NavLink to="/builds" style={linkStyle} title="My Builds" aria-label="My Builds">
-            <BookMarked size={compact ? 18 : 15} /> {!compact && 'My Builds'}
-          </NavLink>
-          <NavLink to="/schedule" style={linkStyle} title="Schedule" aria-label="Schedule">
-            <CalendarDays size={compact ? 18 : 15} /> {!compact && 'Schedule'}
-          </NavLink>
-          <NavLink to="/compare" style={linkStyle} title="Compare" aria-label="Compare">
-            <GitCompareArrows size={compact ? 18 : 15} /> {!compact && 'Compare'}
-          </NavLink>
+        <nav className="nav__links">
+          {LINKS.map(({ to, label, Icon }) => (
+            <NavLink key={to} to={to} title={label} aria-label={label}
+              className={({ isActive }) => 'nav__link' + (isActive ? ' is-active' : '')}>
+              <Icon size={16} strokeWidth={1.9} /><span>{label}</span>
+            </NavLink>
+          ))}
         </nav>
       </div>
     </header>

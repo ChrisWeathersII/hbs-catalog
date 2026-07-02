@@ -314,6 +314,9 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
           <span>#{course.number}</span>
           <span>·</span>
           <span>{course.term}</span>
+          {course.term === 'Spring 2027' && (
+            <span className="prov" title="Spring 2027 times are proxied from Spring 2026 — the official timetable isn't published yet. Slots may move.">provisional</span>
+          )}
           <span>·</span>
           <span>{course.credits} credits</span>
           {course.assessment && <><span>·</span><span>Final: {course.assessment}</span></>}

@@ -172,7 +172,11 @@ function CourseCard({ course, builds, addToBuild, getBuildIdsForCourse, createBu
           </div>
         )}
         <div className="meta">
-          <span>{course.term}</span><span className="dotsep" />
+          <span>{course.term}</span>
+          {course.term === 'Spring 2027' && (
+            <span className="prov" title="Spring 2027 times are proxied from Spring 2026 — the official timetable isn't published yet. Slots may move.">provisional</span>
+          )}
+          <span className="dotsep" />
           <span>{course.credits} cr</span>
           {course.assessment && <><span className="dotsep" /><span>{course.assessment}</span></>}
         </div>

@@ -1,21 +1,9 @@
 import { useMemo } from 'react'
 import { ListChecks, FlaskConical, ArrowLeftRight, ExternalLink, Video } from 'lucide-react'
+import { DEADLINES, nextDeadlineIndex } from '../data/ecDeadlines'
 
 // EC logistics distilled from my.hbs.edu (Registration Basics, Deadlines,
 // Independent Projects, Cross-Registration pages — retrieved 7/1/26).
-
-const DEADLINES = [
-  { date: '2026-07-15', d: 'Jul 15', t: '11:59 PM', label: 'Application-only course applications due' },
-  { date: '2026-07-16', d: 'Jul 16', t: '6:00 PM',  label: 'EC Registration webinar', href: 'https://hbs.zoom.us/j/94612230346', soft: true },
-  { date: '2026-07-23', d: 'Jul 23', t: '8:00 AM',  label: 'EC Registration webinar', href: 'https://hbs.zoom.us/j/94089539256', soft: true },
-  { date: '2026-07-27', d: 'Jul 27', t: '10:00 AM', label: 'Ranking window opens in Schedule Scout' },
-  { date: '2026-07-27', d: 'Jul 27', t: '3:00 PM',  label: 'Independent Project registration opens', soft: true },
-  { date: '2026-08-10', d: 'Aug 10', t: '6:00 PM',  label: 'Ranking window closes — preferences locked' },
-  { date: '2026-08-17', d: 'Aug 17', t: null,       label: 'Initial schedules released' },
-  { date: '2026-08-28', d: 'Aug 28', t: '6:00 PM',  label: 'Add/Drop batch 1' },
-  { date: '2026-09-03', d: 'Sep 3',  t: '6:00 PM',  label: 'Add/Drop batch 2' },
-  { date: '2026-09-11', d: 'Sep 11', t: '6:00 PM',  label: 'Add/Drop period ends · IP registration steps due' },
-]
 
 const CROSS_REG_SCHOOLS = [
   { label: 'HKS',      href: 'https://www.hks.harvard.edu/educational-programs/academic-calendars-policies' },
@@ -29,12 +17,6 @@ const CROSS_REG_SCHOOLS = [
   { label: 'MIT',      href: 'https://registrar.mit.edu/calendar' },
   { label: 'Fletcher', href: 'https://fletcher.tufts.edu/programs/courses/class-schedules-academic-calendars' },
 ]
-
-function nextDeadlineIndex(items) {
-  const now = new Date()
-  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-  return items.findIndex(x => x.date >= todayKey)
-}
 
 export default function Guide() {
   const nextIdx = useMemo(() => nextDeadlineIndex(DEADLINES), [])

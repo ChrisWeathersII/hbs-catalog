@@ -5,9 +5,9 @@ const STORAGE_KEY = 'hbs_course_builds'
 const SYNC_CODE_KEY = 'hbs_sync_code'
 const DEFAULT_BUILD = { id: 'wishlist', name: 'My Wishlist', createdAt: new Date().toISOString(), courseIds: [], sections: {}, notes: {}, colors: {} }
 
-// Migrate old builds that don't have `sections`, `notes`, or `colors` fields
+// Migrate old builds that don't have `sections`, `notes`, `colors`, or `ranking` fields
 function migrateBuilds(builds) {
-  return builds.map(b => ({ ...b, sections: b.sections ?? {}, notes: b.notes ?? {}, colors: b.colors ?? {} }))
+  return builds.map(b => ({ ...b, sections: b.sections ?? {}, notes: b.notes ?? {}, colors: b.colors ?? {}, ranking: b.ranking ?? null }))
 }
 
 function generateCode() {
@@ -139,12 +139,16 @@ export function useCourseBuilds() {
       const { [courseId]: _s, ...sectionsRest } = b.sections ?? {}
       const { [courseId]: _n, ...notesRest    } = b.notes    ?? {}
       const { [courseId]: _c, ...colorsRest   } = b.colors   ?? {}
+      const ranking = b.ranking
+        ? Object.fromEntries(Object.entries(b.ranking).map(([k, ids]) => [k, ids.filter(id => id !== courseId)]))
+        : null
       return {
         ...b,
         courseIds: b.courseIds.filter(id => id !== courseId),
         sections: sectionsRest,
         notes:    notesRest,
         colors:   colorsRest,
+        ranking,
       }
     }))
   }, [update])
@@ -172,6 +176,12 @@ export function useCourseBuilds() {
     }))
   }, [update])
 
+  // Schedule Scout ranking buckets for a build:
+  // { favorite: [courseId...], great: [...], good: [...], acceptable: [...] }
+  const setBuildRanking = useCallback((buildId, ranking) => {
+    update(prev => prev.map(b => b.id === buildId ? { ...b, ranking } : b))
+  }, [update])
+
   // Per-course free-text note in a build (e.g. "must-take", "backup", "heard great things")
   const setBuildNote = useCallback((buildId, courseId, note) => {
     update(prev => prev.map(b => {
@@ -190,7 +200,7 @@ export function useCourseBuilds() {
   return {
     builds, syncCode, syncStatus, linkDevice,
     createBuild, deleteBuild, renameBuild,
-    addToBuild, removeFromBuild, setBuildSection, setBuildNote, setBuildCourseColor,
+    addToBuild, removeFromBuild, setBuildSection, setBuildNote, setBuildCourseColor, setBuildRanking,
     isInAnyBuild, getBuildIdsForCourse,
   }
 }

@@ -1,5 +1,5 @@
-// HBS Elective Course Catalog — 122 courses (AY 2026-2027)
-// Sources: Fall 2026 EC timetable (PDF, 4.22.26) + Spring 2026 catalog screenshots
+// HBS Elective Course Catalog — 124 courses (AY 2026-2027)
+// Sources: Fall 2026 EC timetable (PDF, 6.25.26) + Spring 2026 catalog screenshots
 //   used as proxy for Spring 2027 since the 2027 timetable isn't published yet.
 // Dual-listed courses (offered both terms) are kept in Fall only.
 
@@ -65,7 +65,7 @@ export const COURSES = [
     title: 'B2B Sales and Distribution',
     units: ['Marketing', 'Entrepreneurial Management'],
     faculty: ['Ed Boyajian', 'Lou Shipley'],
-    term: 'Spring 2027',
+    term: 'Fall 2026',
     credits: 1.5,
     assessment: 'Other',
     popular: false,
@@ -150,10 +150,10 @@ export const COURSES = [
   {
     id: 'a01180d1-f53d-4a0b-accc-56b151b8f2f5',
     number: '1925',
-    title: 'Creating Brand Value',
+    title: 'Creating Brand Value', // listed as "Creating Brand Value AI" on 6.25.26 timetable — confirm exact title
     units: ['Marketing'],
     faculty: ['Julian de Freitas'],
-    term: 'Spring 2027',
+    term: 'Fall 2026',
     credits: 1.5,
     assessment: 'Paper',
     popular: false,
@@ -445,17 +445,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: '4d2a32ae-de8a-49a7-828f-6397c2a8cfee',
-    number: '6673',
-    title: 'Field Course: Startup Operations',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Christina Wallace'],
-    term: 'Fall 2026',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
     id: 'e88f7aa9-1ed8-436a-9b72-4ef59eef84b9',
     number: '6453',
     title: 'Field Course: Value Creation in Small and Medium Firms',
@@ -603,7 +592,7 @@ export const COURSES = [
     number: '6093',
     title: 'Immersive Field Course: Singapore — Shaping a Global Innovation Hub',
     units: ['General Management'],
-    faculty: ['Amy Schulman', 'TBC'],
+    faculty: ['Nien-hê Hsieh', 'Amy Schulman'],
     term: 'Fall 2026',
     credits: 3.0,
     assessment: null,
@@ -1160,6 +1149,41 @@ export const COURSES = [
     popular: true,
   },
 
+  // ── Fall 2026 additions (new on the 6.25.26 timetable update) ──
+  {
+    id: '3e8f5a72-91c4-4b6d-a527-8f1e4c9b2d63',
+    number: '1613',
+    title: 'Building an AI Venture',
+    units: ['Entrepreneurial Management'],
+    faculty: ['Shikhar Ghosh'],
+    term: 'Fall 2026',
+    credits: 1.5,
+    assessment: null,
+    popular: false,
+  },
+  {
+    id: '9c2d7f41-5e8a-4b93-a614-2c7f9e3d8b52',
+    number: '1705',
+    title: 'Elections and Democracy',
+    units: ['Business, Government & the International Economy'],
+    faculty: ['White'], // first name not printed on the timetable — confirm
+    term: 'Fall 2026',
+    credits: 1.5,
+    assessment: null,
+    popular: false,
+  },
+  {
+    id: '6b9e3d54-2f7c-4a81-b936-4e1d8c5a7f29',
+    number: '1791',
+    title: 'Systems Scaling Ventures', // abbreviated "Systems Scaling Vent." on timetable — confirm full title
+    units: ['Accounting & Management', 'Entrepreneurial Management'],
+    faculty: ['Tatiana Sandino'],
+    term: 'Fall 2026',
+    credits: 1.5,
+    assessment: null,
+    popular: false,
+  },
+
   // ── Spring 2027 additions (from Spring 2026 screenshots, treated as proxy) ──
   {
     id: 'a7d92511-3e8f-4a17-9c2d-1b8f3a6d9c47',
@@ -1378,13 +1402,12 @@ export const UNITS = [
 //   timeSlot:  'HH:MM-HH:MM' (24-hour)
 //   qTerm:     'Q1' | 'Q2' | 'Q1Q2'
 //   faculty:   short instructor name(s)
-// Source: official HBS EC Fall 2026 timetable (updated 4.22.26)
+// Source: official HBS EC Fall 2026 timetable (updated 6.25.26)
 export const COURSE_SECTIONS = {
   // ── Single-section X day courses ────────────────────────────────────────────
   '85e66038': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Sebenius' }],          // Advanced Negotiation
   '45817284': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Van Bever' }],         // Building & Sustaining Enterprise
   'def08ede': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Pacelli' }],           // Business Analysis & Valuation
-  '8f2c21c5': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Wing' }],              // Demystifying Family Enterprise
   '6d66137a': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Tadikonda' }],         // Entrep Innovation in Life Sciences
   'dca5b0af': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1',   faculty: 'Hsieh; Rouen' }],      // Q1: Ownership by Design
   '3d4d85f4': [{ section: null, dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Reinert' }],           // Global Capitalism: Past Present Future
@@ -1393,19 +1416,30 @@ export const COURSE_SECTIONS = {
   '4c22a2b9': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Roth; Rigol' }],       // Business at Base of Pyramid
   'd50f9c8e': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Koehn' }],             // Crucibles of Crisis Leadership
   'aa8ac56e': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Howell' }],            // Q2: Entrepreneurial Finance
-  '4b11ee4c': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Satchu' }],            // Founder Mindset
+  '4b11ee4c': [ // Founder Mindset — two sections in 6.25.26 update
+    { section: '01', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Satchu' },
+    { section: '02', dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Satchu' },
+  ],
   'cb453539': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Batter' }],            // Law, Management & Entrepreneurship
   'b69961c3': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Scharfstein' }],       // Managing & Innovating in Financial Services
-  '8accc7f5': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Sebenius; Burns' }],   // Negotiation and Diplomacy
+  '8accc7f5': [ // Negotiation and Diplomacy — meets MON & WED 1:30-2:45pm at HKS (per 6.25.26 grid)
+    { section: null, dayType: 'X', weekday: 'MON', timeSlot: '13:30-14:45', qTerm: 'Q1Q2', faculty: 'Sebenius; Burns' },
+    { section: null, dayType: 'W', weekday: 'WED', timeSlot: '13:30-14:45', qTerm: 'Q1Q2', faculty: 'Sebenius; Burns' },
+  ],
   'f59a3258': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Weiss' }],             // Public Entrepreneurship
   '772ec662': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-15:30', qTerm: 'Q2',   faculty: 'Subramanian' }],       // Q2: Deals
+  '4896291a': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1',   faculty: 'Creo; Herzlinger' }],  // Q1: Innovating in Healthcare (moved from Y day in 6.25.26 update)
+  '65c49a3c': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Creo; Herzlinger' }],  // Q2: FC: Innovating in Healthcare (moved from Y day in 6.25.26 update)
+  '4ab8a95a': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Bertotti' }],          // Q2: Arts of Communication (was Y/Q1; X day Q2 per 6.25.26 update)
+  '5a461398': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Shipley; Boyajian' }], // Q2: B2B Sales and Distribution (Fall per 6.25.26 update)
   // ── Single-section X weekly Tue ─────────────────────────────────────────────
   '975a5281': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Van den Steen' }],    // Advanced Competitive Strategy
   'b62437c6': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Spar' }],             // Capitalism and the State
   'a98bc8bd': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'R. Cohen' }],         // FC: Field X
-  '4d2a32ae': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Wallace' }],          // FC: Startup Operations
   'd92e6279': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Sucher' }],           // The Moral Leader
   '0aadf2d0': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q2',   faculty: 'Hill; Khanna' }],     // Q2: Grand Challenges — Unicorns
+  '3e8f5a72': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q2',   faculty: 'Ghosh' }],            // Q2: Building an AI Venture (new in 6.25.26 update)
+  'a01180d1': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1',   faculty: 'de Freitas' }],       // Q1: Creating Brand Value (AI) (Fall per 6.25.26 update)
   // ── Single-section X weekly Mon (joint-degree) ──────────────────────────────
   '4c3a5082': [{ section: null, dayType: 'X', weekday: 'MON', timeSlot: '16:30-18:45', qTerm: 'Q1Q2', faculty: 'Zelleke' }],          // HKS-HBS Joint Seminar
   '142fde83': [ // Designing Tech Ventures (HBS-SEAS) — meets MON & WED 3:50–5:10pm
@@ -1427,9 +1461,9 @@ export const COURSE_SECTIONS = {
     { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Foley' },
     { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Foley' },
   ],
-  'ee22c766': [ // Crafting Your Life — standard X-day, meets Mon AND Tue (also has Wed 4–6pm plenary)
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Perlow' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Perlow' },
+  'ee22c766': [ // Crafting Your Life — Tuesday class plus shared WED 4:00-6:00pm plenary (per 6.25.26 grid)
+    { section: '01', dayType: 'X', weekday: 'TUE', timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Perlow' },
+    { section: '02', dayType: 'X', weekday: 'TUE', timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Perlow' },
   ],
   '0f273725': [ // Launching Tech Ventures (AI)
     { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Bussgang' },
@@ -1448,22 +1482,24 @@ export const COURSE_SECTIONS = {
   'ad4b72c2': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Ferreira' }],          // Supply Chain Management
   'fc3a4c6d': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Charvel; Dubrowski; Wu' }], // Real Property
   'e3044dbf': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Trumbull' }],          // Strategy in Green Industries
-  '5081cddf': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1',   faculty: 'Cook' }],              // Q1: AI-Powered Digital Marketing
-  '4896291a': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1',   faculty: 'Creo; Herzlinger' }],  // Q1: Innovating in Healthcare
+  '5081cddf': [ // Q1: AI-Powered Digital Marketing — two sections in 6.25.26 update
+    { section: '01', dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1', faculty: 'Cook' },
+    { section: '02', dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1', faculty: 'Cook' },
+  ],
   '2fd39bf3': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1',   faculty: 'Fubini' }],            // Q1: Mastering Consulting Skills
   '6993442c': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1',   faculty: 'Tamayo' }],            // Q1: Modern Corporate Strategy
   '5228d56b': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Whillans' }],          // Motivating People
   '13e6c05a': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Hsieh; Van Bever' }],  // Spiritual Lives of Leaders
   'eabe7b68': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1',   faculty: 'Dey; Heese' }],        // Q1: Anatomy of Fraud
-  '4ab8a95a': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1',   faculty: 'Bertotti' }],          // Q1: Arts of Communication
   '98279899': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1',   faculty: 'Cole; Gandhi' }],      // Q1: Sustainable Investing
   'ae780de8': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q2',   faculty: 'Zhang' }],             // Q2: Managing Human Capital
-  '65c49a3c': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q2',   faculty: 'Creo; Herzlinger' }],  // Q2: FC: Innovating in Healthcare
   '2461b9e5': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Chertavian; Jones; McComb; Trelstad' }], // Q2: FC: Investing for Impact
   '3f90dbf9': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q2',   faculty: 'Alcacer; Sadun' }],    // Q2: Driving Profitable Growth
+  '8f2c21c5': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1Q2', faculty: 'Wing' }],              // Demystifying Family Enterprise (moved from X 8:30 in 6.25.26 update)
+  '6b9e3d54': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Sandino' }],           // Q2: Systems Scaling Ventures (new in 6.25.26 update)
   // ── Single-section Y weekly Thu (Immersive Field Courses) ───────────────────
   'a2eda43b': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Belo-Osagie; Macomber' }],   // IFC: Cape Town
-  '60c474fa': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Schulman' }],          // IFC: Singapore
+  '60c474fa': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Hsieh; Schulman' }],   // IFC: Singapore
   '7a65b59f': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Gandhi' }],            // IFC: India
   'd56fe353': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Reinert; Roscini' }],  // IFC: Italy
   '14adf598': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Rithmire; Shih' }],    // IFC: China
@@ -1517,6 +1553,7 @@ export const COURSE_SECTIONS = {
   '70db20e6': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Tadikonda' }],         // FC: Life Sciences Venture Creation
   'e6189e3f': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'L. Cohen' }],          // FC: Inside the Family Office
   'd77157c7': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Fleiss' }],            // FC: Seminar in Investing
+  '9c2d7f41': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1',   faculty: 'White' }],             // Q1: Elections & Democracy (new in 6.25.26 update)
   'bbe21c16': [ // War & Peace: Lessons of History
     { section: '01', dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Malhotra' },
     { section: '02', dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Mohan' },
@@ -1545,10 +1582,8 @@ export const COURSE_SECTIONS = {
   '50f42be2': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Gompers' }],               // 1631 Global Entrepreneurship
   '5b6e2c47': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Srinivasan' }],            // 2010 Corporate Governance
   '9a2c8e13': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S2',   faculty: 'Iyoha' }],                 // 1645 Launching Global Ventures
-  '5a461398': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1',   faculty: 'Shipley' }],               // 1985 B2B Sales and Distribution
 
   // Spring X-day 1:30-2:50
-  'a01180d1': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'De Freitas' }],            // 1925 Creating Brand Value
   'd5d828b1': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'Baron' }],                 // 1235 OWN
   '72ffc0d0': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'Weinzierl' }],             // 1177 SPACE
   '7e57f029': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'Huckman; Gallani' }],      // 2195 Transforming Health Care

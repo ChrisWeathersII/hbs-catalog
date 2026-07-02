@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { ListChecks, FlaskConical, ArrowLeftRight, ExternalLink, Video } from 'lucide-react'
 import { DEADLINES, nextDeadlineIndex } from '../data/ecDeadlines'
+import { SHOW_TOUR_EVENT } from '../components/WelcomeTour'
 
 // EC logistics distilled from my.hbs.edu (Registration Basics, Deadlines,
 // Independent Projects, Cross-Registration pages — retrieved 7/1/26).
@@ -31,7 +32,12 @@ export default function Guide() {
               Registration deadlines, how Schedule Scout works, Independent Projects, and cross-registration — the essentials, without the tabs.
             </p>
           </div>
-          <div className="page-head__meta">Fall 2026 · From my.hbs.edu</div>
+          <div className="page-head__meta page-head__meta--stack">
+            <span>Fall 2026 · From my.hbs.edu</span>
+            <button className="tour-replay" onClick={() => window.dispatchEvent(new Event(SHOW_TOUR_EVENT))}>
+              Replay the intro tour
+            </button>
+          </div>
         </div>
         <div className="rule rule--soft" />
 

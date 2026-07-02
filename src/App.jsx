@@ -8,6 +8,7 @@ import CompareBuilds from './pages/CompareBuilds'
 import AcademicCalendar from './pages/AcademicCalendar'
 import Guide from './pages/Guide'
 import RankingView from './pages/RankingView'
+import WelcomeTour from './components/WelcomeTour'
 import { nextHardDeadline } from './data/ecDeadlines'
 import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock } from 'lucide-react'
 
@@ -64,6 +65,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Nav />
+      <WelcomeTour />
       <Routes>
         <Route path="/" element={<Navigate to="/courses" replace />} />
         <Route path="/courses" element={<CourseCatalog {...courseBuildsHook} />} />

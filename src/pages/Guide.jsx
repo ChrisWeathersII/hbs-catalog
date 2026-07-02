@@ -113,7 +113,7 @@ export default function Guide() {
           </section>
 
           {/* ── Cross-Registration ── */}
-          <section className="gcard">
+          <section className="gcard gcard--wide">
             <h2 className="gcard__title"><ArrowLeftRight size={17} /> Cross-registration</h2>
             <p className="gcard__lede">
               Take courses at other Harvard schools, MIT, or Tufts Fletcher. No pre-registering — it happens at the start of the host school's term, and most start later than HBS.

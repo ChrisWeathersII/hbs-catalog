@@ -6,7 +6,8 @@ import CourseBuilds from './pages/CourseBuilds'
 import ScheduleView from './pages/ScheduleView'
 import CompareBuilds from './pages/CompareBuilds'
 import AcademicCalendar from './pages/AcademicCalendar'
-import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange } from 'lucide-react'
+import Guide from './pages/Guide'
+import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass } from 'lucide-react'
 
 const LINKS = [
   { to: '/courses',  label: 'Courses',   Icon: BookOpen },
@@ -14,6 +15,7 @@ const LINKS = [
   { to: '/schedule', label: 'Schedule',  Icon: CalendarDays },
   { to: '/compare',  label: 'Compare',   Icon: GitCompareArrows },
   { to: '/calendar', label: 'Calendar',  Icon: CalendarRange },
+  { to: '/guide',    label: 'Guide',     Icon: Compass },
 ]
 
 function Nav() {
@@ -54,6 +56,7 @@ export default function App() {
         <Route path="/schedule" element={<ScheduleView {...courseBuildsHook} />} />
         <Route path="/compare" element={<CompareBuilds {...courseBuildsHook} />} />
         <Route path="/calendar" element={<AcademicCalendar />} />
+        <Route path="/guide" element={<Guide />} />
       </Routes>
     </BrowserRouter>
   )

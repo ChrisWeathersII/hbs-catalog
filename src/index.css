@@ -403,6 +403,95 @@ a{ color:inherit; text-decoration:none; }
 .empty__btn:hover{ border-color:var(--crimson-300); color:var(--crimson-700); }
 
 /* ============================================================================
+   ACADEMIC CALENDAR
+   ========================================================================== */
+:root{
+  /* calendar-only semantic colors (beyond the X/Y/W day language) */
+  --cal-exams-fg:#6d28d9;   --cal-exams-bg:#f1ecfb;
+  --cal-sips-fg:#c2410c;    --cal-sips-bg:#feeade;
+  --cal-reg-fg:#b45309;     --cal-reg-bg:#fdf3e6;
+  --cal-bridges-fg:#a16207; --cal-bridges-bg:#fbf3d9;
+  --cal-ws-fg:#0d9488;      --cal-ws-bg:#e4f6f3;
+  --cal-star-fg:#0f766e;    --cal-star-bg:#dff3ef;
+}
+
+/* term summary cards */
+.cal-terms{ display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:16px; margin-bottom:22px; }
+.termcard{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg);
+  padding:16px 18px 15px; box-shadow:var(--shadow-xs);
+}
+.termcard__head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.termcard__name{ font-family:var(--font-serif); font-weight:560; font-size:20px; letter-spacing:-.006em; color:var(--ink-900); }
+.termcard__q{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-400); white-space:nowrap; }
+.termcard__grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.termcard__sched{ border:1px solid var(--line); border-radius:var(--r-md); padding:10px 12px 11px; }
+.termcard__sched--x{ background:var(--x-bg); border-color:var(--x-line); }
+.termcard__sched--y{ background:var(--y-bg); border-color:var(--y-line); }
+.termcard__day{ display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; margin-bottom:7px; }
+.termcard__sched--x .termcard__day{ color:var(--x-fg); }
+.termcard__sched--y .termcard__day{ color:var(--y-fg); }
+.termcard__day em{ font-style:normal; font-weight:500; font-size:11px; color:var(--ink-400); margin-left:auto; white-space:nowrap; }
+.termcard__row{ display:flex; align-items:baseline; gap:8px; font-size:12.5px; color:var(--ink-700); padding:2px 0; }
+.termcard__row b{ font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--ink-500); width:20px; flex-shrink:0; }
+.termcard__row span{ font-family:var(--font-mono); font-size:12px; }
+
+/* legend */
+.cal-legend{ display:flex; flex-wrap:wrap; gap:6px 14px; margin:0 0 22px; }
+.lg{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:550; color:var(--ink-600); }
+.lg__swatch{ width:13px; height:13px; border-radius:4px; flex-shrink:0; border:1px solid transparent; }
+
+/* month cards */
+.cal-months{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:16px; }
+.mcal{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg);
+  padding:15px 16px 13px; box-shadow:var(--shadow-xs); display:flex; flex-direction:column;
+}
+.mcal__head{ display:flex; align-items:baseline; gap:8px; margin-bottom:11px; }
+.mcal__name{ font-family:var(--font-serif); font-weight:560; font-size:19px; letter-spacing:-.006em; color:var(--ink-900); }
+.mcal__year{ font-family:var(--font-mono); font-size:11px; color:var(--ink-400); }
+.mcal__grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.mcal__dow{
+  text-align:center; font-family:var(--font-mono); font-size:9.5px; font-weight:500;
+  letter-spacing:.05em; color:var(--ink-400); padding-bottom:3px;
+}
+.dcell{
+  aspect-ratio:1; border-radius:7px; display:grid; place-items:center;
+  font-size:12px; font-weight:550; color:var(--ink-400);
+  background:transparent; cursor:default;
+}
+.dcell--pad{ background:none; }
+.dcell[title]{ cursor:help; }
+:is(.dcell,.lg__swatch).is-x{ background:var(--x-bg); color:var(--x-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-y{ background:var(--y-bg); color:var(--y-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-star{ background:var(--cal-star-bg); color:var(--cal-star-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-open{ background:var(--surface-2); color:var(--ink-500); box-shadow:inset 0 0 0 1px var(--line); }
+:is(.dcell,.lg__swatch).is-reg{ background:var(--cal-reg-bg); color:var(--cal-reg-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-holiday{ background:var(--crimson-50); color:var(--crimson-600); font-weight:650; }
+:is(.dcell,.lg__swatch).is-exams{ background:var(--cal-exams-bg); color:var(--cal-exams-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-bridges{ background:var(--cal-bridges-bg); color:var(--cal-bridges-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-sips{ background:var(--cal-sips-bg); color:var(--cal-sips-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-ws{ background:var(--cal-ws-bg); color:var(--cal-ws-fg); font-weight:650; }
+:is(.dcell,.lg__swatch).is-commence{ background:var(--crimson-600); color:#fff; font-weight:700; }
+:is(.dcell,.lg__swatch).is-today{ box-shadow:0 0 0 2px var(--crimson-500); }
+.dcell__star{ position:relative; }
+.dcell__star i{ font-style:normal; position:absolute; top:-3px; right:-6px; font-size:10px; }
+.mcal__note{
+  margin-top:11px; padding-top:9px; border-top:1px solid var(--line);
+  font-size:11.5px; line-height:1.45; color:var(--ink-500);
+}
+.cal-fineprint{
+  margin-top:26px; text-align:center;
+  font-family:var(--font-mono); font-size:10.5px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--ink-400);
+}
+
+@media (max-width:640px){
+  .termcard__grid{ grid-template-columns:1fr; }
+  .cal-months{ grid-template-columns:1fr; }
+}
+
+/* ============================================================================
    MOBILE
    ========================================================================== */
 .mobilebar{ display:none; }

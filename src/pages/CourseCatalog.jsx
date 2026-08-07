@@ -166,11 +166,10 @@ function CourseCard({ course, builds, addToBuild, getBuildIdsForCourse, createBu
       <div className="card__faculty">{course.faculty.join(' · ')}</div>
 
       {ev && (
-        <div className="evalrow" title={`Student evals, ${evTerms} · ${ev.responses} responses`}>
+        <div className="evalrow" title={`Student evals, ${evTerms}`}>
           <span className="evalstat"><Star size={12} /> <b>{ev.quality.toFixed(1)}</b> quality</span>
           <span className="evalstat"><b>{ev.instr.toFixed(1)}</b> instructor</span>
           <span className="evalstat"><Clock3 size={12} /> <b>{ev.prepHrs.toFixed(1)}h</b> prep</span>
-          <span className="evalrow__n">n={ev.responses}</span>
         </div>
       )}
       {evRecord?.newCourse && (

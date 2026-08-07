@@ -8,12 +8,14 @@ import CompareBuilds from './pages/CompareBuilds'
 import AcademicCalendar from './pages/AcademicCalendar'
 import Guide from './pages/Guide'
 import RankingView from './pages/RankingView'
+import PowerRankings from './pages/PowerRankings'
 import WelcomeTour from './components/WelcomeTour'
 import { nextHardDeadline } from './data/ecDeadlines'
-import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock } from 'lucide-react'
+import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock, Trophy } from 'lucide-react'
 
 const LINKS = [
   { to: '/courses',  label: 'Courses',   Icon: BookOpen },
+  { to: '/power',    label: 'Power Rankings', Icon: Trophy },
   { to: '/builds',   label: 'My Builds', Icon: BookMarked },
   { to: '/ranking',  label: 'Ranking',   Icon: ListOrdered },
   { to: '/schedule', label: 'Schedule',  Icon: CalendarDays },
@@ -76,6 +78,7 @@ export default function App() {
         <Route path="/calendar" element={<AcademicCalendar />} />
         <Route path="/guide" element={<Guide />} />
         <Route path="/ranking" element={<RankingView {...courseBuildsHook} />} />
+        <Route path="/power" element={<PowerRankings />} />
       </Routes>
     </BrowserRouter>
   )

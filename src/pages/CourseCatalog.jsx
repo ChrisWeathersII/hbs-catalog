@@ -1,13 +1,15 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, Plus, Check, Bookmark, X, Repeat, Calendar, SlidersHorizontal, ChevronDown, Flame, SearchX } from 'lucide-react'
+import { Search, Plus, Check, Bookmark, X, Repeat, Calendar, SlidersHorizontal, ChevronDown, Flame, SearchX, Star, Clock3, Sparkles } from 'lucide-react'
 import { COURSES, UNITS, getCourseSections } from '../data/hbsCourses'
+import { getCourseEval } from '../data/courseEvals'
 
 // Re-export the canonical scheduleLabel from the data layer (backwards compat)
 export { scheduleLabel } from '../data/hbsCourses'
 
 const TERMS = ['All terms', 'Fall 2026', 'Spring 2027']
 const CREDITS = ['Any credits', '1.5 credits', '3.0 credits']
+const SORTS = ['Sort: A–Z', 'Sort: top quality', 'Sort: top instructor', 'Sort: lightest prep', 'Sort: heaviest prep', 'Sort: most rated']
 const ASSESSMENT_TYPES = ['Paper', 'Exam', 'Project', 'Presentation']
 const WEEKDAY_SHORT = { MON: 'Mon', TUE: 'Tue', WED: 'Wed', THU: 'Thu', FRI: 'Fri' }
 const DAY_FULL = { X: 'X · Mon/Tue', Y: 'Y · Thu/Fri', W: 'Wed' }
@@ -48,6 +50,30 @@ function matchesDay(course, dayFilter) {
   const dt = getSections(course.id)[0]?.dayType ?? null
   if (!dt) return true
   return dt === dayFilter
+}
+
+// Eval record with actual scores (null for unrated and new courses).
+function ratedEval(course) {
+  const ev = getCourseEval(course.number)
+  return ev && !ev.newCourse ? ev : null
+}
+// Rated courses first by the metric, unrated keep A–Z at the bottom.
+function sortCourses(list, sort) {
+  if (sort === 'Sort: A–Z') return list
+  const metric = {
+    'Sort: top quality':    ev => -ev.quality,
+    'Sort: top instructor': ev => -ev.instr,
+    'Sort: lightest prep':  ev => ev.prepHrs,
+    'Sort: heaviest prep':  ev => -ev.prepHrs,
+    'Sort: most rated':     ev => -ev.responses,
+  }[sort]
+  return [...list].sort((a, b) => {
+    const ea = ratedEval(a), eb = ratedEval(b)
+    if (!ea && !eb) return a.title.localeCompare(b.title)
+    if (!ea) return 1
+    if (!eb) return -1
+    return (metric(ea) - metric(eb)) || (eb.responses - ea.responses) || a.title.localeCompare(b.title)
+  })
 }
 
 // ── Save-to-build menu ────────────────────────────────────────────────────────
@@ -117,6 +143,9 @@ function CourseCard({ course, builds, addToBuild, getBuildIdsForCourse, createBu
   const sections = getSections(course.id)
   const sched = sections[0] ?? null
   const isMulti = sections.length > 1
+  const evRecord = getCourseEval(course.number)
+  const ev = evRecord && !evRecord.newCourse ? evRecord : null
+  const evTerms = ev ? [...new Set(ev.evals.map(e => e.term))].join(' + ') : null
 
   return (
     <article className="card">
@@ -135,6 +164,20 @@ function CourseCard({ course, builds, addToBuild, getBuildIdsForCourse, createBu
 
       <Link className="card__title" to={`/courses/${course.id}`}>{course.title}</Link>
       <div className="card__faculty">{course.faculty.join(' · ')}</div>
+
+      {ev && (
+        <div className="evalrow" title={`Student evals, ${evTerms} · ${ev.responses} responses`}>
+          <span className="evalstat"><Star size={12} /> <b>{ev.quality.toFixed(1)}</b> quality</span>
+          <span className="evalstat"><b>{ev.instr.toFixed(1)}</b> instructor</span>
+          <span className="evalstat"><Clock3 size={12} /> <b>{ev.prepHrs.toFixed(1)}h</b> prep</span>
+          <span className="evalrow__n">n={ev.responses}</span>
+        </div>
+      )}
+      {evRecord?.newCourse && (
+        <div className="evalrow evalrow--new" title="New course — no student evaluation data yet">
+          <span className="evalstat"><Sparkles size={12} /> New course · no evals yet</span>
+        </div>
+      )}
 
       <div className="card__spacer" />
 
@@ -233,6 +276,10 @@ function FilterRow({ st }) {
         title="High-demand electives">
         <Flame size={13} /> Popular
       </button>
+      <button className={'fpill' + (st.ratedOnly ? ' is-active' : '')} onClick={() => st.setRatedOnly(v => !v)}
+        title="Courses with student evaluation scores">
+        <Star size={13} /> Rated
+      </button>
 
       <span className="fdiv" />
       <div className="fgroup">
@@ -260,7 +307,9 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
   const [assess, setAssess] = useState(new Set())
   const [multiOnly, setMultiOnly] = useState(false)
   const [popularOnly, setPopularOnly] = useState(false)
+  const [ratedOnly, setRatedOnly] = useState(false)
   const [onceDays, setOnceDays] = useState(new Set())
+  const [sort, setSort] = useState(SORTS[0])
   const [mOpen, setMOpen] = useState(false)
 
   const toggleSet = (setter) => (v) => setter(prev => { const n = new Set(prev); n.has(v) ? n.delete(v) : n.add(v); return n })
@@ -281,17 +330,18 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
     list = list.filter(c => matchesAssessment(c, assess))
     if (multiOnly) list = list.filter(c => getSections(c.id).length > 1)
     if (popularOnly) list = list.filter(c => c.popular)
+    if (ratedOnly) list = list.filter(c => ratedEval(c))
     list = list.filter(c => matchesOnceWeekly(c, onceDays))
-    return list
-  }, [search, unit, term, credits, dayFilter, assess, multiOnly, popularOnly, onceDays])
+    return sortCourses(list, sort)
+  }, [search, unit, term, credits, dayFilter, assess, multiOnly, popularOnly, ratedOnly, onceDays, sort])
 
   const hasFilters = Boolean(search || unit !== 'All units' || term !== 'All terms' || credits !== 'Any credits'
-    || dayFilter !== 'All' || assess.size || multiOnly || popularOnly || onceDays.size)
+    || dayFilter !== 'All' || assess.size || multiOnly || popularOnly || ratedOnly || onceDays.size)
   const clear = () => { setSearch(''); setUnit('All units'); setTerm('All terms'); setCredits('Any credits')
-    setDayFilter('All'); setAssess(new Set()); setMultiOnly(false); setPopularOnly(false); setOnceDays(new Set()) }
+    setDayFilter('All'); setAssess(new Set()); setMultiOnly(false); setPopularOnly(false); setRatedOnly(false); setOnceDays(new Set()) }
 
   const activeCount = (unit !== 'All units') + (term !== 'All terms') + (credits !== 'Any credits')
-    + (dayFilter !== 'All') + assess.size + (multiOnly ? 1 : 0) + (popularOnly ? 1 : 0) + onceDays.size
+    + (dayFilter !== 'All') + assess.size + (multiOnly ? 1 : 0) + (popularOnly ? 1 : 0) + (ratedOnly ? 1 : 0) + onceDays.size
 
   const chips = []
   if (unit !== 'All units') chips.push(['unit', unit, () => setUnit('All units')])
@@ -301,10 +351,11 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
   ;[...assess].forEach(a => chips.push(['a' + a, 'Final: ' + a, () => toggleAssess(a)]))
   if (multiOnly) chips.push(['multi', 'Multi-section', () => setMultiOnly(false)])
   if (popularOnly) chips.push(['pop', 'Popular', () => setPopularOnly(false)])
+  if (ratedOnly) chips.push(['rated', 'Rated', () => setRatedOnly(false)])
   ;[...onceDays].forEach(d => chips.push(['o' + d, 'Meets: ' + WEEKDAY_SHORT[d], () => toggleOnceDay(d)]))
 
   const st = { dayFilter, setDayFilter, assess, toggleAssess, multiOnly, setMultiOnly, popularOnly, setPopularOnly,
-    onceDays, toggleOnceDay, hasFilters, clear }
+    ratedOnly, setRatedOnly, onceDays, toggleOnceDay, hasFilters, clear }
   const cardProps = { builds, addToBuild, getBuildIdsForCourse, createBuild }
 
   return (
@@ -331,6 +382,7 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
             <Select value={unit} set={setUnit} options={['All units', ...UNITS]} isSet={unit !== 'All units'} />
             <Select value={term} set={setTerm} options={TERMS} isSet={term !== 'All terms'} />
             <Select value={credits} set={setCredits} options={CREDITS} isSet={credits !== 'Any credits'} />
+            <Select value={sort} set={setSort} options={SORTS} isSet={sort !== SORTS[0]} />
           </div>
           <button className="fpill m-filterbtn mobile-only" style={{ height: 40, padding: '0 14px' }}
             onClick={() => setMOpen(o => !o)}>
@@ -345,6 +397,7 @@ export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse
             <Select value={unit} set={setUnit} options={['All units', ...UNITS]} isSet={unit !== 'All units'} />
             <Select value={term} set={setTerm} options={TERMS} isSet={term !== 'All terms'} />
             <Select value={credits} set={setCredits} options={CREDITS} isSet={credits !== 'Any credits'} />
+            <Select value={sort} set={setSort} options={SORTS} isSet={sort !== SORTS[0]} />
           </div>
         )}
 

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, Bookmark, Check, Plus, Loader, Clock } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Bookmark, Check, Plus, Loader, Clock, BarChart3, Sparkles } from 'lucide-react'
 import { COURSES, getCourseSections, scheduleLabel } from '../data/hbsCourses'
+import { getCourseEval } from '../data/courseEvals'
 
 const DAY_COLOR = { X: '#1d4ed8', Y: '#15803d', W: '#b45309' }
 const DAY_BG    = { X: '#dbeafe', Y: '#bbf7d0', W: '#fde68a' }
@@ -238,6 +239,103 @@ function SectionsBlock({ courseId, sections, builds, setBuildSection, getBuildId
   )
 }
 
+// ── Student evaluations ─────────────────────────────────────────────────────
+function StatTile({ label, value, suffix, sub, meter }) {
+  return (
+    <div style={{ flex: '1 1 130px', minWidth: 120, background: '#f9fafb', border: '1px solid #f3f4f6', borderRadius: '0.5rem', padding: '0.75rem 0.875rem' }}>
+      <div style={{ fontSize: '0.7rem', fontWeight: 600, color: '#6b7280', letterSpacing: '0.02em', marginBottom: '0.25rem' }}>{label}</div>
+      <div style={{ fontSize: '1.375rem', fontWeight: 600, color: '#111827', lineHeight: 1.1 }}>
+        {value}{suffix && <span style={{ fontSize: '0.8125rem', fontWeight: 500, color: '#9ca3af' }}> {suffix}</span>}
+      </div>
+      {meter != null && (
+        <div style={{ marginTop: '0.5rem', height: 4, borderRadius: 99, background: '#f7dae2', overflow: 'hidden' }}>
+          <div style={{ width: `${Math.min(100, meter * 100)}%`, height: '100%', borderRadius: 99, background: '#A41034' }} />
+        </div>
+      )}
+      {sub && <div style={{ marginTop: '0.375rem', fontSize: '0.7rem', color: '#9ca3af' }}>{sub}</div>}
+    </div>
+  )
+}
+
+function EvalsBlock({ course }) {
+  const ev = getCourseEval(course.number)
+  if (!ev) return null
+
+  const box = { background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.75rem', padding: '1rem 1.25rem', marginBottom: '1.25rem' }
+  const head = { display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'var(--font-serif)', fontSize: '1.125rem', fontWeight: 600, color: '#111827' }
+
+  if (ev.newCourse) {
+    return (
+      <div style={box}>
+        <div style={head}><BarChart3 size={16} style={{ color: '#6b7280' }} /> Student evaluations</div>
+        <p style={{ margin: '0.625rem 0 0', fontSize: '0.875rem', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <Sparkles size={14} style={{ color: '#9ca3af', flexShrink: 0 }} />
+          New course — no student evaluation data yet.
+        </p>
+      </div>
+    )
+  }
+
+  const terms = [...new Set(ev.evals.map(e => e.term))].join(' + ')
+  const multi = ev.evals.length > 1
+  const one = ev.evals[0]
+  const pm = (sd) => sd != null ? `±${sd.toFixed(1)}` : ''
+
+  const th = { textAlign: 'left', padding: '0.375rem 0.625rem', fontSize: '0.675rem', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.04em', borderBottom: '1px solid #f3f4f6', whiteSpace: 'nowrap' }
+  const td = { padding: '0.5rem 0.625rem', fontSize: '0.8125rem', color: '#374151', borderBottom: '1px solid #f9fafb', whiteSpace: 'nowrap' }
+  const num = { ...td, fontVariantNumeric: 'tabular-nums' }
+  const sd = { fontSize: '0.7rem', color: '#9ca3af', marginLeft: 3 }
+
+  return (
+    <div style={box}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+        <div style={head}><BarChart3 size={16} style={{ color: '#6b7280' }} /> Student evaluations</div>
+        <span style={{ fontSize: '0.75rem', color: '#9ca3af', marginLeft: 'auto' }}>
+          {terms} · {ev.responses} responses{multi ? ` · ${ev.evals.length} sections` : ''}
+        </span>
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.625rem', flexWrap: 'wrap' }}>
+        <StatTile label="Course quality" value={ev.quality.toFixed(1)} suffix="/ 7" meter={ev.quality / 7} />
+        <StatTile label="Instructor effectiveness" value={ev.instr.toFixed(1)} suffix="/ 7" meter={ev.instr / 7} />
+        <StatTile label="Prep per class" value={ev.prepHrs.toFixed(1)} suffix="hrs" />
+        <StatTile label="Responses" value={ev.responses} />
+      </div>
+
+      {multi ? (
+        <div style={{ marginTop: '0.875rem', overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead><tr>
+              <th style={th}>Term</th><th style={th}>Section</th><th style={th}>Faculty</th>
+              <th style={th}>Quality</th><th style={th}>Instructor</th><th style={th}>Prep hrs</th><th style={th}>N</th>
+            </tr></thead>
+            <tbody>
+              {ev.evals.map((e, i) => (
+                <tr key={i}>
+                  <td style={td}>{e.term}</td>
+                  <td style={{ ...num, fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#6b7280' }}>{e.section}</td>
+                  <td style={td}>{e.faculty}</td>
+                  <td style={num}>{e.quality.toFixed(1)}<span style={sd}>{pm(e.qualitySD)}</span></td>
+                  <td style={num}>{e.instr.toFixed(1)}<span style={sd}>{pm(e.instrSD)}</span></td>
+                  <td style={num}>{e.prepHrs.toFixed(1)}<span style={sd}>{pm(e.prepSD)}</span></td>
+                  <td style={num}>{e.responses}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p style={{ margin: '0.5rem 0 0', fontSize: '0.7rem', color: '#9ca3af', fontStyle: 'italic' }}>
+            Headline numbers are response-weighted across evaluated sections. ± is one standard deviation.
+          </p>
+        </div>
+      ) : (
+        <p style={{ margin: '0.625rem 0 0', fontSize: '0.75rem', color: '#9ca3af' }}>
+          {one.term} · §{one.section} · {one.faculty} · quality ±{one.qualitySD?.toFixed(1)}, instructor ±{one.instrSD?.toFixed(1)}, prep ±{one.prepSD?.toFixed(1)}
+        </p>
+      )}
+    </div>
+  )
+}
+
 export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse, createBuild, setBuildSection }) {
   const { id } = useParams()
   const course = COURSES.find(c => c.id === id)
@@ -347,6 +445,8 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
           setBuildSection={setBuildSection}
           getBuildIdsForCourse={getBuildIdsForCourse}
         />
+
+        <EvalsBlock course={course} />
 
         <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '0.75rem', overflow: 'hidden' }}>
           <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #f3f4f6' }}>

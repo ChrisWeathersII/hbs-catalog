@@ -48,9 +48,9 @@ function variesByProf(profs) {
 
 // dir: the natural "best first" direction for each column
 const COLS = [
-  { key: 'quality', label: 'Quality', dir: -1 },
-  { key: 'instr',   label: 'Instructor', dir: -1 },
-  { key: 'prepHrs', label: 'Prep hrs', dir: 1 },
+  { key: 'quality', label: 'Quality', abbr: 'Qual', dir: -1 },
+  { key: 'instr',   label: 'Instructor', abbr: 'Instr', dir: -1 },
+  { key: 'prepHrs', label: 'Prep hrs', abbr: 'Prep', dir: 1 },
 ]
 
 const AVG = (() => {
@@ -163,7 +163,8 @@ export default function PowerRankings() {
                   {COLS.map(c => (
                     <th key={c.key} aria-sort={sortKey === c.key ? (sortDir === -1 ? 'descending' : 'ascending') : undefined}>
                       <button className={'pwr__sort' + (sortKey === c.key ? ' is-active' : '')} onClick={() => setSort(c.key)}>
-                        {c.label}
+                        <span className="pwr__lbl">{c.label}</span>
+                        <span className="pwr__lbl--sm">{c.abbr}</span>
                         {sortKey === c.key && (sortDir === -1 ? <ArrowDown size={12} strokeWidth={2.5} /> : <ArrowUp size={12} strokeWidth={2.5} />)}
                       </button>
                     </th>

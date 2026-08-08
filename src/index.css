@@ -192,9 +192,9 @@ a{ color:inherit; text-decoration:none; }
 }
 .search .search__clear:hover{ background:var(--surface-2); color:var(--ink-700); }
 
-.select{ position:relative; }
+.select{ position:relative; min-width:0; max-width:100%; }
 .select select{
-  appearance:none; -webkit-appearance:none;
+  appearance:none; -webkit-appearance:none; max-width:100%;
   height:40px; min-width:0; padding:0 34px 0 13px; cursor:pointer;
   border:1px solid var(--line-2); border-radius:var(--r-md);
   background:var(--surface); color:var(--ink-800); font-size:13.5px; font-weight:500;
@@ -385,6 +385,7 @@ a{ color:inherit; text-decoration:none; }
 .pwr__bar{ width:64px; height:4px; border-radius:99px; background:var(--crimson-100); overflow:hidden; flex-shrink:0; }
 .pwr__bar span{ display:block; height:100%; border-radius:99px; background:var(--crimson-600); }
 .pwr__foot{ margin-top:14px; font-size:12.5px; color:var(--ink-400); max-width:72ch; }
+.pwr__lbl--sm{ display:none; }
 
 @media (max-width:768px){
   .pwr__bar{ display:none; }
@@ -400,6 +401,24 @@ a{ color:inherit; text-decoration:none; }
   .pwr__profcell{ padding-left:16px !important; }
   .pwr__fallrow td{ padding-left:16px; }
   .pwr__avg{ margin-left:0; width:100%; }
+}
+
+/* Phone widths: the six-column table only fits once headers abbreviate
+   and the hrs unit drops — nowrap headers set the table's min width. */
+@media (max-width:640px){
+  .pwr__lbl{ display:none; }
+  .pwr__lbl--sm{ display:inline; }
+  .pwr__unit{ display:none; }
+  .pwr th{ padding:8px 5px; }
+  .pwr td{ padding:9px 5px; }
+}
+@media (max-width:360px){
+  .pwr th{ padding:8px 4px; }
+  .pwr td{ padding:9px 4px; }
+  .pwr__rankhead{ width:28px; }
+  .pwr__rank{ min-width:20px; height:20px; padding:0 4px; }
+  .pwr__chevhead{ width:16px; }
+  .pwr__chev{ width:12px; height:12px; }
 }
 
 /* multi-section block */

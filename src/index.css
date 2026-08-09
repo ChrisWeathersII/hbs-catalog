@@ -365,7 +365,6 @@ a{ color:inherit; text-decoration:none; }
 .pwr__profcell{ padding-left:26px !important; }
 .pwr__profname{ font-size:13px; font-weight:600; color:var(--ink-800); }
 .pwr__profmeta{ margin-top:1px; font-size:11.5px; color:var(--ink-400); }
-.pwr__fallrow td{ background:var(--paper-2); border-bottom:1px solid var(--line); font-size:12px; color:var(--ink-400); padding:8px 14px 10px 26px; }
 .pwr__avg{ margin-left:auto; font-size:12.5px; color:var(--ink-400); }
 .pwr__avg b{ font-weight:650; color:var(--ink-600); }
 .pwr__rank{
@@ -379,6 +378,7 @@ a{ color:inherit; text-decoration:none; }
 .pwr__course a{ font-family:var(--font-serif); font-size:15.5px; font-weight:560; color:var(--ink-900); letter-spacing:-.004em; }
 .pwr__course a:hover{ color:var(--crimson-700); }
 .pwr__meta{ margin-top:2px; font-size:12px; color:var(--ink-400); }
+.pwr__seccount{ font-weight:650; color:var(--ink-600); }
 .pwr__metric{ display:flex; align-items:center; gap:8px; }
 .pwr__metric b{ font-weight:650; color:var(--ink-800); font-size:13.5px; min-width:24px; }
 .pwr__unit{ font-size:11px; color:var(--ink-400); }
@@ -399,7 +399,6 @@ a{ color:inherit; text-decoration:none; }
   .pwr__metric b{ min-width:0; font-size:13px; }
   .pwr__chevhead{ width:22px; }
   .pwr__profcell{ padding-left:16px !important; }
-  .pwr__fallrow td{ padding-left:16px; }
   .pwr__avg{ margin-left:0; width:100%; }
 }
 

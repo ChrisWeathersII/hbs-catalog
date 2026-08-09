@@ -136,7 +136,7 @@ export default function PowerRankings() {
         <div className="page-head">
           <div>
             <h1 className="page-head__title">Power <em>Rankings</em></h1>
-            <p className="page-head__sub">Every rated elective, stacked by student evaluations. Click a class to see each professor's own numbers — the class average can hide real differences between sections.</p>
+            <p className="page-head__sub">Every rated elective, stacked by student evaluations, with section counts for lottery odds. Click a class to see each professor's own numbers — the class average can hide real differences between sections.</p>
           </div>
           <div className="page-head__meta">{RANKED.length} rated courses</div>
         </div>
@@ -185,7 +185,7 @@ export default function PowerRankings() {
                 {rows.map(({ course, ev }, i) => {
                   const isOpen = expanded.has(course.number)
                   const profs = profBreakdown(ev)
-                  const fallSections = getCourseSections(course.id).filter(s => s.faculty)
+                  const sections = getCourseSections(course.id)
                   return (
                     <Fragment key={course.id}>
                       <tr className={'pwr__row' + (isOpen ? ' is-open' : '')} onClick={() => toggle(course.number)}
@@ -194,7 +194,10 @@ export default function PowerRankings() {
                         <td className="pwr__course">
                           <Link to={`/courses/${course.id}`} onClick={e => e.stopPropagation()}>{course.title}</Link>
                           {variesByProf(profs) && <span className="pwr__varies">varies by professor</span>}
-                          <div className="pwr__meta">#{course.number} · {course.faculty.join(' · ')} · {course.term}</div>
+                          <div className="pwr__meta">
+                            #{course.number} · {course.faculty.join(' · ')} · {course.term}
+                            {sections.length > 0 && <b className="pwr__seccount"> · {sections.length} section{sections.length > 1 ? 's' : ''}</b>}
+                          </div>
                         </td>
                         <td><MetricCell value={ev.quality} max={7} /></td>
                         <td><MetricCell value={ev.instr} max={7} /></td>
@@ -216,15 +219,6 @@ export default function PowerRankings() {
                           <td />
                         </tr>
                       ))}
-                      {isOpen && fallSections.length > 0 && (
-                        <tr className="pwr__fallrow">
-                          <td />
-                          <td colSpan={6}>
-                            Teaching this fall: {fallSections.map(s => `${s.section ? '§' + s.section + ' ' : ''}${s.faculty}`).join(' · ')}
-                            {' — '}professors without an eval row above haven't taught it recently.
-                          </td>
-                        </tr>
-                      )}
                     </Fragment>
                   )
                 })}

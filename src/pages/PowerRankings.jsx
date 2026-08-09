@@ -31,7 +31,7 @@ function profBreakdown(ev) {
     const w = (key) => rows.reduce((s, r) => s + r[key] * r.responses, 0) / n
     return {
       name: name.includes(', ') ? name.split(', ').slice(0, 2).reverse().join(' ') : name,
-      quality: w('quality'), instr: w('instr'), prepHrs: w('prepHrs'),
+      quality: w('quality'), instr: w('instr'), prepHrs: w('prepHrs'), responses: n,
       terms: [...new Set(rows.map(r => r.term))].join(' + '),
       sections: rows.length,
     }
@@ -48,10 +48,13 @@ function variesByProf(profs) {
 
 // dir: the natural "best first" direction for each column
 const COLS = [
-  { key: 'quality', label: 'Quality', abbr: 'Qual', dir: -1 },
-  { key: 'instr',   label: 'Instructor', abbr: 'Instr', dir: -1 },
-  { key: 'prepHrs', label: 'Prep hrs', abbr: 'Prep', dir: 1 },
+  { key: 'quality',   label: 'Quality', abbr: 'Qual', dir: -1 },
+  { key: 'instr',     label: 'Instructor', abbr: 'Instr', dir: -1 },
+  { key: 'prepHrs',   label: 'Prep hrs', abbr: 'Prep', dir: 1 },
+  { key: 'responses', label: 'Responses', abbr: 'N', dir: -1 },
 ]
+
+const MIN_RESPONSES = ['Any responses', '30+ responses', '50+ responses', '100+ responses']
 
 const AVG = (() => {
   const m = (key) => RANKED.reduce((s, { ev }) => s + ev[key], 0) / RANKED.length
@@ -81,6 +84,7 @@ function MetricCell({ value, max }) {
 export default function PowerRankings() {
   const [search, setSearch] = useState('')
   const [unit, setUnit] = useState('All units')
+  const [minResp, setMinResp] = useState(MIN_RESPONSES[0])
   const [sortKey, setSortKey] = useState('quality')
   const [sortDir, setSortDir] = useState(-1)
   const [expanded, setExpanded] = useState(() => new Set())
@@ -114,13 +118,17 @@ export default function PowerRankings() {
         || c.faculty.some(f => f.toLowerCase().includes(q)) || c.number.includes(q))
     }
     if (unit !== 'All units') list = list.filter(({ course: c }) => c.units.includes(unit))
+    if (minResp !== MIN_RESPONSES[0]) {
+      const min = parseInt(minResp)
+      list = list.filter(({ ev }) => ev.responses >= min)
+    }
     return [...list].sort((a, b) =>
       sortDir * (a.ev[sortKey] - b.ev[sortKey])
       || (b.ev.quality - a.ev.quality)
       || (b.ev.instr - a.ev.instr)
       || (b.ev.responses - a.ev.responses)
       || a.course.title.localeCompare(b.course.title))
-  }, [search, unit, sortKey, sortDir])
+  }, [search, unit, minResp, sortKey, sortDir])
 
   return (
     <div className="page">
@@ -142,6 +150,7 @@ export default function PowerRankings() {
             {search && <button className="search__clear" onClick={() => setSearch('')}><X size={14} strokeWidth={2.25} /></button>}
           </div>
           <Select value={unit} set={setUnit} options={['All units', ...UNITS]} isSet={unit !== 'All units'} />
+          <Select value={minResp} set={setMinResp} options={MIN_RESPONSES} isSet={minResp !== MIN_RESPONSES[0]} />
           <span className="pwr__avg">
             Rated-elective average: <b>{AVG.quality.toFixed(1)}</b> quality · <b>{AVG.instr.toFixed(1)}</b> instructor · <b>{AVG.prepHrs.toFixed(1)}h</b> prep
           </span>
@@ -190,6 +199,7 @@ export default function PowerRankings() {
                         <td><MetricCell value={ev.quality} max={7} /></td>
                         <td><MetricCell value={ev.instr} max={7} /></td>
                         <td><div className="pwr__metric"><b>{ev.prepHrs.toFixed(1)}</b><span className="pwr__unit">hrs</span></div></td>
+                        <td><div className="pwr__metric"><b>{ev.responses}</b></div></td>
                         <td className="pwr__chevcell"><ChevronRight size={15} className="pwr__chev" /></td>
                       </tr>
                       {isOpen && profs.map(p => (
@@ -202,13 +212,14 @@ export default function PowerRankings() {
                           <td><MetricCell value={p.quality} max={7} /></td>
                           <td><MetricCell value={p.instr} max={7} /></td>
                           <td><div className="pwr__metric"><b>{p.prepHrs.toFixed(1)}</b><span className="pwr__unit">hrs</span></div></td>
+                          <td><div className="pwr__metric"><b>{p.responses}</b></div></td>
                           <td />
                         </tr>
                       ))}
                       {isOpen && fallSections.length > 0 && (
                         <tr className="pwr__fallrow">
                           <td />
-                          <td colSpan={5}>
+                          <td colSpan={6}>
                             Teaching this fall: {fallSections.map(s => `${s.section ? '§' + s.section + ' ' : ''}${s.faculty}`).join(' · ')}
                             {' — '}professors without an eval row above haven't taught it recently.
                           </td>
@@ -224,8 +235,9 @@ export default function PowerRankings() {
 
         <p className="pwr__foot">
           Quality and instructor effectiveness are on the 1–7 evaluation scale, response-weighted
-          across evaluated sections. Prep is average hours per class session. New courses without
-          evaluation history aren't ranked — they're flagged in the catalog instead.
+          across evaluated sections. Prep is average hours per class session. Responses is the
+          number of student evaluations behind the scores — more responses, steadier numbers.
+          New courses without evaluation history aren't ranked — they're flagged in the catalog instead.
         </p>
       </div>
     </div>

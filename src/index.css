@@ -549,7 +549,7 @@ a{ color:inherit; text-decoration:none; }
 }
 
 /* term summary cards */
-.cal-terms{ display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:16px; margin-bottom:22px; }
+.cal-terms{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(320px,100%),1fr)); gap:16px; margin-bottom:22px; }
 .termcard{
   background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg);
   padding:16px 18px 15px; box-shadow:var(--shadow-xs);

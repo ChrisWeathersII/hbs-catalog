@@ -129,7 +129,7 @@ function BuildCard({ build, onDelete, onRename, onRemoveCourse, onSetNote, defau
     }}>
       {/* Header */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '0.75rem',
+        display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap',
         padding: '1rem 1.25rem',
         borderBottom: open ? '1px solid var(--color-border-light)' : 'none',
         background: 'var(--color-surface)',
@@ -252,8 +252,8 @@ function BuildCard({ build, onDelete, onRename, onRemoveCourse, onSetNote, defau
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <Link to={`/courses/${course.id}`} style={{
                       fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-fg)',
-                      textDecoration: 'none', display: 'block',
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      textDecoration: 'none', overflow: 'hidden',
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                     }}>
                       {course.title}
                     </Link>
@@ -266,7 +266,7 @@ function BuildCard({ build, onDelete, onRename, onRemoveCourse, onSetNote, defau
                   {/* Units */}
                   <div style={{ display: 'flex', gap: '0.25rem', flexShrink: 0 }}>
                     {course.units.slice(0, 1).map(u => (
-                      <span key={u} style={{
+                      <span key={u} className="bcard__unitchip" style={{
                         fontSize: '0.65rem', fontWeight: 600,
                         color: UNIT_COLORS[u] || '#374151',
                         background: `${UNIT_COLORS[u] || '#374151'}18`,

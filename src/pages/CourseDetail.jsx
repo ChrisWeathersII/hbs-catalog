@@ -287,7 +287,7 @@ function EvalsBlock({ course }) {
   const sd = { fontSize: '0.7rem', color: '#9ca3af', marginLeft: 3 }
 
   return (
-    <div style={box}>
+    <div className="evalcard" style={box}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
         <div style={head}><BarChart3 size={16} style={{ color: '#6b7280' }} /> Student evaluations</div>
         <span style={{ fontSize: '0.75rem', color: '#9ca3af', marginLeft: 'auto' }}>
@@ -304,10 +304,13 @@ function EvalsBlock({ course }) {
 
       {multi ? (
         <div style={{ marginTop: '0.875rem', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table className="evaltable" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead><tr>
               <th style={th}>Term</th><th style={th}>Section</th><th style={th}>Faculty</th>
-              <th style={th}>Quality</th><th style={th}>Instructor</th><th style={th}>Prep hrs</th><th style={th}>N</th>
+              <th style={th}><span className="lbl-full">Quality</span><span className="lbl-sm">Qual</span></th>
+              <th style={th}><span className="lbl-full">Instructor</span><span className="lbl-sm">Instr</span></th>
+              <th style={th}><span className="lbl-full">Prep hrs</span><span className="lbl-sm">Prep</span></th>
+              <th style={th}>N</th>
             </tr></thead>
             <tbody>
               {ev.evals.map((e, i) => (

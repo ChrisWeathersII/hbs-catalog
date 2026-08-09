@@ -412,6 +412,31 @@ a{ color:inherit; text-decoration:none; }
   .pwr th{ padding:8px 5px; }
   .pwr td{ padding:9px 5px; }
 }
+/* Builds page: cap the unit chip on phones so course titles keep their room */
+@media (max-width:640px){
+  .bcard__unitchip{ max-width:7.5rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+
+/* Generic full/abbreviated label swap for phone widths */
+.lbl-sm{ display:none; }
+@media (max-width:640px){
+  .lbl-full{ display:none; }
+  .lbl-sm{ display:inline; }
+}
+
+/* Course detail eval table: on phones drop the section and N columns and the
+   ±SD notes so each professor's quality numbers fit on screen un-scrolled.
+   Inline th/td styles set padding and nowrap, hence the !important. */
+@media (max-width:640px){
+  .evalcard{ padding:1rem 0.75rem !important; }
+  .evaltable th:nth-child(2), .evaltable td:nth-child(2),
+  .evaltable th:nth-child(7), .evaltable td:nth-child(7){ display:none; }
+  .evaltable td span{ display:none; }
+  .evaltable th, .evaltable td{ padding:6px 5px !important; }
+  .evaltable td{ font-size:0.75rem !important; }
+  .evaltable td:nth-child(3){ white-space:normal !important; }
+}
+
 @media (max-width:360px){
   .pwr th{ padding:8px 4px; }
   .pwr td{ padding:9px 4px; }

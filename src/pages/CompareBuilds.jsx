@@ -338,7 +338,7 @@ export default function CompareBuilds({ builds, removeFromBuild, addToBuild, set
         )}
 
         {/* Side-by-side mini schedules */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(420px, 100%), 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
           <MiniSchedule build={buildA} accent={ACCENT_A} />
           <MiniSchedule build={buildB} accent={ACCENT_B} />
         </div>

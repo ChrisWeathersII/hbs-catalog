@@ -17,13 +17,13 @@ const STEPS = [
   },
   {
     Icon: CalendarDays,
-    title: 'Rank, schedule, compare',
-    body: 'Order your picks on the Ranking page, see them on a weekly calendar in Schedule — time conflicts get flagged — and put two builds side by side in Compare.',
+    title: 'Plan, then rank',
+    body: 'Plan shows your picks on a weekly calendar (time conflicts get flagged), lets Suggest build schedules around rules like "Fridays off", and puts two builds side by side in Compare. Rank orders them for Schedule Scout.',
   },
   {
     Icon: Compass,
     title: 'Deadlines & the EC Guide',
-    body: 'The Guide covers registration deadlines, cross-registration, and Independent Projects. The countdown pill in the top nav always shows the next hard deadline.',
+    body: 'The Guide covers registration deadlines, cross-registration, Independent Projects, and the academic calendar. The countdown pill in the top nav always shows the next hard deadline.',
   },
 ]
 

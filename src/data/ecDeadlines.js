@@ -1,9 +1,18 @@
-// Fall 2026 EC registration deadlines — shared by the Guide page and the
-// next-deadline pill in the nav. Source: my.hbs.edu (retrieved 7/1/26).
+// EC registration deadlines — shared by the Guide page, the Scout Ranking page
+// and the next-deadline pill in the nav. Source: my.hbs.edu.
 // `soft` = informational (webinars, openings) — shown on the Guide timeline
 // but skipped by the nav pill, which only surfaces hard deadlines.
 
-export const DEADLINES = [
+// The term students are currently registering for. Drives the Ranking page and
+// the Guide timeline.
+export const REGISTRATION_TERM = 'Spring 2027'
+
+// Spring 2027 registration dates — TODO: fill in from my.hbs.edu once posted.
+// Until then the Guide shows a "not posted yet" note and the nav pill hides.
+const SPRING_2027_DEADLINES = []
+
+// Fall 2026 (retrieved 7/1/26) — kept for reference; all past.
+const FALL_2026_DEADLINES = [
   { date: '2026-07-15', d: 'Jul 15', t: '11:59 PM', label: 'Application-only course applications due', short: 'App-only courses due' },
   { date: '2026-07-16', d: 'Jul 16', t: '6:00 PM',  label: 'EC Registration webinar', href: 'https://hbs.zoom.us/j/94612230346', soft: true },
   { date: '2026-07-23', d: 'Jul 23', t: '8:00 AM',  label: 'EC Registration webinar', href: 'https://hbs.zoom.us/j/94089539256', soft: true },
@@ -15,6 +24,16 @@ export const DEADLINES = [
   { date: '2026-09-03', d: 'Sep 3',  t: '6:00 PM',  label: 'Add/Drop batch 2', short: 'Add/Drop batch 2' },
   { date: '2026-09-11', d: 'Sep 11', t: '6:00 PM',  label: 'Add/Drop period ends · IP registration steps due', short: 'Add/Drop ends' },
 ]
+
+export const DEADLINES_BY_TERM = { 'Fall 2026': FALL_2026_DEADLINES, 'Spring 2027': SPRING_2027_DEADLINES }
+export const DEADLINES = DEADLINES_BY_TERM[REGISTRATION_TERM] ?? []
+
+// Scout ranking window for the registration term (null until dates are posted)
+export function rankingWindow(items = DEADLINES) {
+  const open  = items.find(x => /ranking window opens/i.test(x.label))
+  const close = items.find(x => /ranking window closes/i.test(x.label))
+  return open || close ? { open, close } : null
+}
 
 export function todayKey() {
   const t = new Date()

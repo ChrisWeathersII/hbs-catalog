@@ -1,7 +1,11 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { CalendarDays, AlertTriangle, X, Plus, ChevronDown, ChevronUp, Download, Repeat, Search, GripVertical, Palette, SlidersHorizontal } from 'lucide-react'
 import { COURSES, getCourseSections, getActiveSection } from '../data/hbsCourses'
+import { REGISTRATION_TERM } from '../data/ecDeadlines'
+
+// Open on the semester students are registering for
+const DEFAULT_SEMESTER = REGISTRATION_TERM.split(' ')[0]  // 'Fall' | 'Spring'
 
 // ── Time geometry ─────────────────────────────────────────────────────────────
 const T_START = 8 * 60 + 30      // 8:30 AM
@@ -99,32 +103,32 @@ function useIsMobile() {
 }
 
 // ── iCal generation ───────────────────────────────────────────────────────────
-// Fall 2026 dates from the official EC calendar; Spring 2027 dates are estimates
-// (refine when the official Spring calendar is published).
+// Fall 2026 dates from the official EC calendar; Spring 2027 dates from the EC
+// calendar (Q3/Q4) cross-checked against section dates in the HBS catalog API.
 const QTERM_DATES = {
   X: {
     Q1:   { start: '2026-09-02', until: '2026-10-19' },
     Q2:   { start: '2026-10-20', until: '2026-12-01' },
     Q1Q2: { start: '2026-09-02', until: '2026-12-01' },
-    S1:   { start: '2027-01-25', until: '2027-03-12' },
-    S2:   { start: '2027-03-15', until: '2027-05-07' },
-    S1S2: { start: '2027-01-25', until: '2027-05-07' },
+    S1:   { start: '2027-01-25', until: '2027-03-08' },
+    S2:   { start: '2027-03-09', until: '2027-04-20' },
+    S1S2: { start: '2027-01-25', until: '2027-04-20' },
   },
   Y: {
     Q1:   { start: '2026-09-03', until: '2026-10-15' },
     Q2:   { start: '2026-10-16', until: '2026-12-03' },
     Q1Q2: { start: '2026-09-03', until: '2026-12-03' },
-    S1:   { start: '2027-01-28', until: '2027-03-11' },
-    S2:   { start: '2027-03-18', until: '2027-05-06' },
-    S1S2: { start: '2027-01-28', until: '2027-05-06' },
+    S1:   { start: '2027-01-28', until: '2027-03-05' },
+    S2:   { start: '2027-03-10', until: '2027-04-21' },
+    S1S2: { start: '2027-01-28', until: '2027-04-21' },
   },
   W: {
     Q1:   { start: '2026-09-02', until: '2026-10-19' },
     Q2:   { start: '2026-10-21', until: '2026-12-02' },
     Q1Q2: { start: '2026-09-02', until: '2026-12-02' },
-    S1:   { start: '2027-01-27', until: '2027-03-10' },
-    S2:   { start: '2027-03-17', until: '2027-05-05' },
-    S1S2: { start: '2027-01-27', until: '2027-05-05' },
+    S1:   { start: '2027-01-27', until: '2027-03-03' },
+    S2:   { start: '2027-03-10', until: '2027-04-14' },
+    S1S2: { start: '2027-01-27', until: '2027-04-14' },
   },
 }
 
@@ -1041,13 +1045,20 @@ const sidebarFrameStyle = {
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function ScheduleView({ builds, addToBuild, removeFromBuild, setBuildSection, setBuildCourseColor }) {
-  const [buildId, setBuildId]               = useState(() => builds[0]?.id ?? 'all')
-  const [semester, setSemester]             = useState('Fall')  // 'Fall' | 'Spring'
+  // ?build=<id> (e.g. from "Open in Schedule" on the Suggest page) picks the
+  // build and the semester its courses are in
+  const [searchParams] = useSearchParams()
+  const linkedBuild = builds.find(b => b.id === searchParams.get('build'))
+  const [buildId, setBuildId]               = useState(() => linkedBuild?.id ?? builds[0]?.id ?? 'all')
+  const [semester, setSemester]             = useState(() => {
+    const first = linkedBuild && COURSES.find(c => linkedBuild.courseIds.includes(c.id))
+    return first ? first.term.split(' ')[0] : DEFAULT_SEMESTER
+  })  // 'Fall' | 'Spring'
   const [quarter, setQuarter]               = useState('all')    // 'all' | Q1/Q2 (Fall) | S1/S2 (Spring)
   const [meetingPattern, setMeetingPattern] = useState('all')    // 'all' | 'once' | 'rotating'
   const [filtersOpen, setFiltersOpen] = useState(false)
   const isMobile = useIsMobile()
-  const filterCount = (semester !== 'Fall' ? 1 : 0) + (quarter !== 'all' ? 1 : 0) + (meetingPattern !== 'all' ? 1 : 0)
+  const filterCount = (semester !== DEFAULT_SEMESTER ? 1 : 0) + (quarter !== 'all' ? 1 : 0) + (meetingPattern !== 'all' ? 1 : 0)
 
   const activeBuild = buildId === 'all' ? null : builds.find(b => b.id === buildId)
   const courseIdSet = activeBuild ? new Set(activeBuild.courseIds) : null
@@ -1384,7 +1395,7 @@ export default function ScheduleView({ builds, addToBuild, removeFromBuild, setB
 
           {semester === 'Spring' && !isMobile && (
             <span style={{ fontSize: '0.7rem', color: '#9ca3af', flexBasis: '100%' }}>
-              Note: Spring schedule data is best-guess pending the official Spring 2027 timetable.
+              Spring 2027 times from the official HBS timetable. Most courses also have a few swap-day sessions set by the academic calendar.
             </span>
           )}
           {!isMobile && (

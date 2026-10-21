@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, Bookmark, Check, Plus, Loader, Clock, BarChart3, Sparkles } from 'lucide-react'
-import { COURSES, getCourseSections, scheduleLabel } from '../data/hbsCourses'
+import { COURSES, getCourseSections, scheduleLabel, TERM_SRCDB } from '../data/hbsCourses'
 import { getCourseEval } from '../data/courseEvals'
 
 const DAY_COLOR = { X: '#1d4ed8', Y: '#15803d', W: '#b45309' }
@@ -353,13 +353,14 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
     // catalog scraper is slow or down.
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 10_000)
-    fetch(`/api/catalog/${course.number}`, { signal: controller.signal })
+    const srcdb = TERM_SRCDB[course.term]
+    fetch(`/api/catalog/${course.number}${srcdb ? `?srcdb=${srcdb}` : ''}`, { signal: controller.signal })
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => { setDesc(data); setLoading(false) })
       .catch(() => { setError(true); setLoading(false) })
       .finally(() => clearTimeout(timer))
     return () => { clearTimeout(timer); controller.abort() }
-  }, [course?.number])
+  }, [course?.id])
 
   if (!course) {
     return (
@@ -415,9 +416,6 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
           <span>#{course.number}</span>
           <span>·</span>
           <span>{course.term}</span>
-          {course.term === 'Spring 2027' && (
-            <span className="prov" title="Spring 2027 times are proxied from Spring 2026 — the official timetable isn't published yet. Slots may move.">provisional</span>
-          )}
           <span>·</span>
           <span>{course.credits} credits</span>
           {course.assessment && <><span>·</span><span>Final: {course.assessment}</span></>}

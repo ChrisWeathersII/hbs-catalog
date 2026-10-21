@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { ListChecks, FlaskConical, ArrowLeftRight, ExternalLink, Video } from 'lucide-react'
-import { DEADLINES, nextDeadlineIndex } from '../data/ecDeadlines'
+import { DEADLINES, REGISTRATION_TERM, nextDeadlineIndex } from '../data/ecDeadlines'
 import { SHOW_TOUR_EVENT } from '../components/WelcomeTour'
 
 // EC logistics distilled from my.hbs.edu (Registration Basics, Deadlines,
@@ -33,7 +33,7 @@ export default function Guide() {
             </p>
           </div>
           <div className="page-head__meta page-head__meta--stack">
-            <span>Fall 2026 · From my.hbs.edu</span>
+            <span>{REGISTRATION_TERM} · From my.hbs.edu</span>
             <button className="tour-replay" onClick={() => window.dispatchEvent(new Event(SHOW_TOUR_EVENT))}>
               Replay the intro tour
             </button>
@@ -44,7 +44,12 @@ export default function Guide() {
         <div className="guide">
           {/* ── Deadlines timeline ── */}
           <section className="gcard gcard--tl">
-            <h2 className="gcard__title">Fall registration deadlines</h2>
+            <h2 className="gcard__title">{REGISTRATION_TERM.split(' ')[0]} registration deadlines</h2>
+            {DEADLINES.length === 0 && (
+              <p className="gcard__lede">
+                {REGISTRATION_TERM} registration dates aren't posted yet. Check <a href="https://my.hbs.edu" target="_blank" rel="noreferrer">my.hbs.edu</a> <ExternalLink size={12} />. The full {REGISTRATION_TERM} timetable is already in the catalog.
+              </p>
+            )}
             <ol className="tl">
               {DEADLINES.map((x, i) => {
                 const past = i < nextIdx || nextIdx === -1

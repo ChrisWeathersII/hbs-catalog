@@ -8,7 +8,7 @@ const STEPS = [
   {
     Icon: BookOpen,
     title: 'Browse every elective',
-    body: 'All 124 Fall and Spring electives in one place. Filter by term or day pattern, search by name or professor, and click any course for the full description and meeting times.',
+    body: 'Every Fall and Spring elective in one place. Filter by term or day pattern, search by name or professor, and click any course for the full description and meeting times.',
   },
   {
     Icon: BookMarked,

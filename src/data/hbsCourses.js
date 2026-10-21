@@ -1,9 +1,14 @@
-// HBS Elective Course Catalog — 124 courses (AY 2026-2027)
-// Sources: Fall 2026 EC timetable (PDF, 6.25.26) + Spring 2026 catalog screenshots
-//   used as proxy for Spring 2027 since the 2027 timetable isn't published yet.
-// Dual-listed courses (offered both terms) are kept in Fall only.
+// HBS Elective Course Catalog (AY 2026-2027)
+// Fall 2026: hand-entered from the EC timetable PDF (6.25.26). Courses offered in
+//   both terms have a separate Spring entry (own id) in the generated module.
+// Spring 2027: generated from the HBS catalog API by scripts/fetch-term.mjs
+//   (src/data/terms/spring2027.js). Re-run the script to refresh it.
+import { TERM_COURSES as SPRING_2027_COURSES, TERM_SECTIONS as SPRING_2027_SECTIONS, TERM_SRCDB as SPRING_2027_SRCDB } from './terms/spring2027.js'
 
-export const COURSES = [
+// HBS catalog API term codes, so course descriptions come from the right term
+export const TERM_SRCDB = { 'Fall 2026': '792148', 'Spring 2027': SPRING_2027_SRCDB }
+
+const FALL_2026_COURSES = [
   {
     id: 'f572e281-6fa9-431d-b8a8-40c1094fd386',
     number: '1632',
@@ -45,17 +50,6 @@ export const COURSES = [
     faculty: ['Jacob Cook'],
     term: 'Fall 2026',
     credits: 1.5,
-    assessment: 'Paper',
-    popular: true,
-  },
-  {
-    id: 'df94eb75-1354-415c-9754-22387adffbdf',
-    number: '2090',
-    title: 'Authentic Leader Development',
-    units: ['Organizational Behavior'],
-    faculty: ['Robin Ely', 'Deborah Winshel', 'Monique Burns Thompson'],
-    term: 'Spring 2027',
-    credits: 3.0,
     assessment: 'Paper',
     popular: true,
   },
@@ -115,17 +109,6 @@ export const COURSES = [
     popular: true,
   },
   {
-    id: '82681870-6cb1-4b7b-a2f4-76e2a52c4284',
-    number: '1564',
-    title: 'Challenges and Opportunities in the Restaurant Industry',
-    units: ['General Management', 'Entrepreneurial Management'],
-    faculty: ['Andy Pforzheimer', 'Michael S. Kaufman'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
     id: '93d534d5-334e-40d4-928f-278434f383de',
     number: '1416',
     title: 'Corporate Finance: Corporate Financial Operations (CFO)',
@@ -159,17 +142,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: 'dfe57052-c00b-4728-9013-8e32a6f97b0e',
-    number: '1160',
-    title: 'Creating the Modern Financial System',
-    units: ['Business, Government & the International Economy'],
-    faculty: ['David Moss'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: true,
-  },
-  {
     id: '4c3a5082-3948-47d8-a83f-2717f341e340',
     number: '5230',
     title: 'Creating Value in Business and Government (HKS-HBS Joint Degree Seminar)',
@@ -178,17 +150,6 @@ export const COURSES = [
     term: 'Fall 2026',
     credits: 3.0,
     assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '9f6772cb-47fc-4d7e-a367-7f719f5ed948',
-    number: '1420',
-    title: 'Creating Value Through Corporate Restructuring',
-    units: ['Finance'],
-    faculty: ['Stuart C. Gilson'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Exam',
     popular: false,
   },
   {
@@ -236,17 +197,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: '5a16b429-4c4b-4396-a8a9-7f899ce18115',
-    number: '2111',
-    title: 'Digital Operations',
-    units: ['Technology & Operations Management'],
-    faculty: ['Antonio Moreno'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: null,
-    popular: false,
-  },
-  {
     id: '3f90dbf9-f939-43ed-949a-ffaf0d4bcf83',
     number: '2165',
     title: 'Driving Profitable Growth',
@@ -254,28 +204,6 @@ export const COURSES = [
     faculty: ['Raffaella Sadun', 'Juan Alcacer'],
     term: 'Fall 2026',
     credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '5e7d49b5-760e-4c69-a9ef-eb29a1408480',
-    number: '1105',
-    title: 'Energy',
-    units: ['Business, Government & the International Economy', 'General Management'],
-    faculty: ['Dustin Tingley'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '27577ad6-92bd-46ab-8e21-a84c6b3b354d',
-    number: '1625',
-    title: 'Entrepreneurial Finance',
-    units: ['Entrepreneurial Management', 'Finance'],
-    faculty: ['Raymond Kluender'],
-    term: 'Spring 2027',
-    credits: 3.0,
     assessment: 'Paper',
     popular: false,
   },
@@ -302,17 +230,6 @@ export const COURSES = [
     popular: true,
   },
   {
-    id: '15a51b39-9215-4889-9571-58b32a7aee1b',
-    number: '1695',
-    title: 'Entrepreneurial Sales 102: Building the First Sales Team',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Lou Shipley'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper/Project',
-    popular: false,
-  },
-  {
     id: 'c403f8f6-61fb-42c7-b4c2-a29c80e0da92',
     number: '1130',
     title: 'Entrepreneurship and Global Capitalism',
@@ -335,28 +252,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: 'c3a7d1df-0b36-4e27-af68-02479817590e',
-    number: '6340',
-    title: 'Field Course: Advanced Business Plans for Innovating in Health Care',
-    units: ['General Management'],
-    faculty: ['Ben Creo', 'Regina Herzlinger'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper/Project',
-    popular: false,
-  },
-  {
-    id: '3b6d720e-5775-407d-b621-e37d9d0a1a81',
-    number: '6913',
-    title: 'Field Course: Business of the Arts',
-    units: ['General Management', 'Entrepreneurial Management'],
-    faculty: ['Rohit Deshpande', 'Henry McGee'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
     id: '65c49a3c-62af-4264-9754-a65eb03efb19',
     number: '6345',
     title: 'Field Course: Business Plans for Innovating in Health Care',
@@ -374,17 +269,6 @@ export const COURSES = [
     units: ['Finance'],
     faculty: ['Randolph Cohen'],
     term: 'Fall 2026',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '37529849-eba3-4a07-9c1a-75732d026061',
-    number: '6334',
-    title: 'Field Course: Field Y: Projects in Business Management',
-    units: ['Finance', 'Entrepreneurial Management'],
-    faculty: ['Randolph Cohen'],
-    term: 'Spring 2027',
     credits: 3.0,
     assessment: 'Paper',
     popular: false,
@@ -423,17 +307,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: 'eaf694dc-9a09-499d-aa28-3d4c69f0c2b9',
-    number: '6440',
-    title: 'Field Course: Private Equity Projects and Ecosystems',
-    units: ['Finance'],
-    faculty: ['John Dionne'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
     id: 'd77157c7-6e36-4594-b23a-a4dca810ae91',
     number: '6454',
     title: 'Field Course: Seminar in Investing',
@@ -442,17 +315,6 @@ export const COURSES = [
     term: 'Fall 2026',
     credits: 3.0,
     assessment: 'Project',
-    popular: false,
-  },
-  {
-    id: 'e88f7aa9-1ed8-436a-9b72-4ef59eef84b9',
-    number: '6453',
-    title: 'Field Course: Value Creation in Small and Medium Firms',
-    units: ['Finance'],
-    faculty: ['Jason Pananos'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
     popular: false,
   },
   {
@@ -475,28 +337,6 @@ export const COURSES = [
     term: 'Fall 2026',
     credits: 3.0,
     assessment: 'Exam with Paper option',
-    popular: false,
-  },
-  {
-    id: '50f42be2-d4b3-4ce2-a663-f7626b0e16fa',
-    number: '1631',
-    title: 'Global Entrepreneurship',
-    units: ['Entrepreneurial Management', 'Finance'],
-    faculty: ['Paul Gompers'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: null,
-    popular: false,
-  },
-  {
-    id: '8cba66cb-4f50-4190-964d-e96a2d0361a9',
-    number: '1151',
-    title: 'Globalization and Emerging Markets',
-    units: ['Business, Government & the International Economy'],
-    faculty: ['Reshmaan Hussam'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Final Exam',
     popular: false,
   },
   {
@@ -621,17 +461,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: '9a1da3c4-b304-43ee-86ca-5f5548537f25',
-    number: '1955',
-    title: 'Innovation and Renovation: Building and Renewing Consumer and Market Relevance',
-    units: ['Marketing'],
-    faculty: ['Tomomichi Amano'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
     id: 'd1698a48-b5f5-49cf-acd7-e25ec0996e0d',
     number: '1180',
     title: 'Institutions, Macroeconomics, and the Global Economy',
@@ -654,34 +483,12 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: '5201a574-3779-4b9f-85a3-be7511ce3e42',
-    number: '1425',
-    title: 'Investment Strategies',
-    units: ['Finance'],
-    faculty: ['Marco Sammon', 'William Vrattos'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
     id: '8d3d4ccf-0828-465f-8cdc-f8b3e07469d1',
     number: '5241',
     title: 'Launch Lab/Capstone 1',
     units: ['Entrepreneurial Management'],
     faculty: ['Alan MacCormack', 'Russell J Wilcox'],
     term: 'Fall 2026',
-    credits: 3.0,
-    assessment: null,
-    popular: false,
-  },
-  {
-    id: 'ea3604b0-b2ea-4c6a-b1ef-77c6558c8507',
-    number: '5242',
-    title: 'Launch Lab/Capstone 2',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Alan MacCormack', 'Russell J Wilcox'],
-    term: 'Spring 2027',
     credits: 3.0,
     assessment: null,
     popular: false,
@@ -704,39 +511,6 @@ export const COURSES = [
     units: ['General Management', 'Entrepreneurial Management'],
     faculty: ['John Batter'],
     term: 'Fall 2026',
-    credits: 3.0,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
-    id: '1440b3ee-9bfe-4ce1-a19e-47d9ddea1428',
-    number: '2031',
-    title: 'Leadership Execution and Action Planning',
-    units: ['Organizational Behavior'],
-    faculty: ['David G. Fubini'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Optional',
-    popular: false,
-  },
-  {
-    id: '23ba66a3-5898-4f80-a958-bf724e843883',
-    number: '1895',
-    title: 'Leading a Family Business',
-    units: ['Strategy'],
-    faculty: ['Josh Baron'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: null,
-    popular: false,
-  },
-  {
-    id: '891a2a94-5995-4f14-8bed-b2362275b226',
-    number: '1556',
-    title: "Making Difficult Decisions: The General Manager's Role",
-    units: ['Technology & Operations Management', 'Strategy', 'General Management'],
-    faculty: ['Tiona Zuzul', 'Amy Edmondson'],
-    term: 'Spring 2027',
     credits: 3.0,
     assessment: 'Exam',
     popular: false,
@@ -808,17 +582,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: 'aa2e3eba-5128-4d01-8542-74947db1f91a',
-    number: '1731',
-    title: 'Navigating Your Worth: AI, Negotiations, and the Nature of Expertise',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Zoe Cullen'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
     id: '918e0798-1d9c-4446-8395-caec506cbc37',
     number: '2240',
     title: 'Negotiation',
@@ -838,17 +601,6 @@ export const COURSES = [
     term: 'Fall 2026',
     credits: 3.0,
     assessment: 'Exam with Paper option',
-    popular: false,
-  },
-  {
-    id: 'd5d828b1-40ec-4401-9e41-542fd506b19f',
-    number: '1235',
-    title: 'OWN: The Power of Company Ownership',
-    units: ['Strategy'],
-    faculty: ['Josh Baron'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Exam or Paper',
     popular: false,
   },
   {
@@ -896,28 +648,6 @@ export const COURSES = [
     popular: false,
   },
   {
-    id: 'b33ecb09-e4e0-4285-a448-d67f106be00c',
-    number: '1475',
-    title: 'Real Estate Investing',
-    units: ['Finance'],
-    faculty: ['Dwight Angelini', 'W. Matt Kelly'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
-    id: 'ebedf80e-d9e7-4c95-a1eb-21abcd6fbb1b',
-    number: '1484',
-    title: 'Real Estate Private Equity',
-    units: ['Finance', 'Entrepreneurial Management'],
-    faculty: ['Nori Gerardo Lietz'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
     id: 'fc3a4c6d-5ff3-4f1f-8f5e-73fa2b2527f3',
     number: '1684',
     title: 'Real Property',
@@ -926,39 +656,6 @@ export const COURSES = [
     term: 'Fall 2026',
     credits: 3.0,
     assessment: 'Exam',
-    popular: false,
-  },
-  {
-    id: '0c01a0e4-a902-465d-af96-7f1b5bbdd1f2',
-    number: '1553',
-    title: 'Reweaving Ourselves and the World: New Perspectives on Climate Change',
-    units: ['General Management'],
-    faculty: ['Rebecca Henderson'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '72ffc0d0-1ffc-48cc-9630-4a8a713fa3ad',
-    number: '1177',
-    title: 'SPACE: Space, Public and Commercial Economics',
-    units: ['Business, Government & the International Economy'],
-    faculty: ['Matthew Weinzierl'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: null,
-    popular: false,
-  },
-  {
-    id: '131a07d6-8032-439f-95d0-c902aace5edc',
-    number: '1788',
-    title: 'Scaling Technology Ventures',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Jeffrey Rayport'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Exam or Project',
     popular: false,
   },
   {
@@ -982,17 +679,6 @@ export const COURSES = [
     credits: 3.0,
     assessment: 'Paper',
     popular: true,
-  },
-  {
-    id: '993b2798-01a2-4543-b438-f20b57828008',
-    number: '1257',
-    title: 'Strategy for Entrepreneurs',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Rembrand Koning'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
   },
   {
     id: 'e3044dbf-ea79-483e-9b0c-a7c90f288054',
@@ -1061,17 +747,6 @@ export const COURSES = [
     popular: true,
   },
   {
-    id: 'f777d9ea-fbf0-437a-bd4f-7a3cfcd361df',
-    number: '1122',
-    title: 'The Coming of Managerial Capitalism',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Tom Nicholas'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
     id: '4b11ee4c-cc62-475d-bc70-0ed34b97c49c',
     number: '1676',
     title: 'The Founder Mindset',
@@ -1101,28 +776,6 @@ export const COURSES = [
     faculty: ['Derek van Bever', 'Nien-hê Hsieh'],
     term: 'Fall 2026',
     credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '97c68398-8231-4949-b875-fda43774fe80',
-    number: '1727',
-    title: 'Tough Tech Ventures',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Joshua Lev Krieger'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '7e57f029-5a6a-4d79-9849-d54346734e54',
-    number: '2195',
-    title: 'Transforming Health Care Delivery',
-    units: ['Technology & Operations Management', 'Accounting & Management'],
-    faculty: ['Robert Huckman', 'Susanna Gallani'],
-    term: 'Spring 2027',
-    credits: 1.5,
     assessment: 'Paper',
     popular: false,
   },
@@ -1183,196 +836,9 @@ export const COURSES = [
     assessment: null,
     popular: false,
   },
-
-  // ── Spring 2027 additions (from Spring 2026 screenshots, treated as proxy) ──
-  {
-    id: 'a7d92511-3e8f-4a17-9c2d-1b8f3a6d9c47',
-    number: '2267',
-    title: 'Deals (Spring)',
-    units: ['Negotiation', 'Organizations & Markets'],
-    faculty: ['Guhan Subramanian'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '88c4f3b2-9d6e-4f51-a18c-3e7d2b9a5c81',
-    number: '1885',
-    title: 'Leadership and Happiness',
-    units: ['Organizational Behavior'],
-    faculty: ['Arthur C. Brooks'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: true,
-  },
-  {
-    id: '2f8d9a01-7c4b-4e93-b256-8a1f3d7e9c64',
-    number: '8223',
-    title: 'Independent Project in Finance',
-    units: ['Finance'],
-    faculty: ['Jason Pananos'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
-    id: '5b6e2c47-8d91-4a32-9f17-2e6c4b8a3d59',
-    number: '2010',
-    title: 'Corporate Governance and Boards of Directors',
-    units: ['Accounting & Management', 'Organizational Behavior'],
-    faculty: ['Suraj Srinivasan'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '9a2c8e13-4f6b-4d28-a91e-5c8d2a7f3e94',
-    number: '1645',
-    title: 'Launching Global Ventures',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Leonard Iyoha'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '3d7b9a62-8e1f-4c47-b395-7a2d9c4e8f51',
-    number: '5223',
-    title: 'Capstone Project',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Edward A. Anderson'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
-    id: '7e1f4c89-2a6d-4b35-9f17-8c4e3d9a2b71',
-    number: '1578',
-    title: 'Doing Business with China 2025',
-    units: ['Business, Government & the International Economy'],
-    faculty: ['William C. Kirby'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: 'c8b2d7e5-3a4f-4e91-b687-9d2c1e8a4f63',
-    number: '1601',
-    title: 'Transforming Education through Social Entrepreneurship',
-    units: ['Entrepreneurial Management', 'General Management'],
-    faculty: ['V. Kasturi Rangan', 'Kim Smith'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: 'f3a91b46-7c8d-4e25-a193-6b4f2d8e1c97',
-    number: '1418',
-    title: 'Strategies for Value Creation — Abridged',
-    units: ['Finance', 'Strategy'],
-    faculty: ['Edward A. Mayfield'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Exam',
-    popular: false,
-  },
-  {
-    id: '6e4c8d72-9a3f-4b18-c275-1d8e3a6f9c42',
-    number: '8312',
-    title: 'Independent Project in Entrepreneurial Management',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Satish Tadikonda'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
-    id: 'b9f7e2a1-5c4d-4e76-9183-2a8d6f3e1c95',
-    number: '1155',
-    title: 'Business and Geopolitics',
-    units: ['Business, Government & the International Economy'],
-    faculty: ['Jeremy Friedman'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: 'd2a4c891-7e3f-4b92-a486-5c1d8a3f9e67',
-    number: '6665',
-    title: 'Field Course: Entrepreneurial Sales 103',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Lou Shipley'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
-  {
-    id: 'e58a7d34-1c9f-4b27-a695-8d2e4a7f3c81',
-    number: '1507',
-    title: 'Building and Sustaining a Successful Enterprise Intensive',
-    units: ['Technology & Operations Management', 'General Management'],
-    faculty: ['Willy Shih'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '4c8b2f96-7d3e-4a85-b194-6c2f9a8d3e71',
-    number: '1608',
-    title: 'AI Systems & Bayesian Strategy',
-    units: ['Technology & Operations Management', 'Entrepreneurial Management'],
-    faculty: ['Reza Satchu'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: true,
-  },
-  {
-    id: '7d3e9a18-4c5f-4b62-a791-8e2d3a6f9c47',
-    number: '1607',
-    title: 'Founder Launch',
-    units: ['Entrepreneurial Management'],
-    faculty: ['Reza Satchu'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: true,
-  },
-  {
-    id: '2a8c4e75-9b3d-4f81-c697-1a4d8e2f3c95',
-    number: '1921',
-    title: 'AI-Driven Marketing for Entrepreneurs and Enterprises',
-    units: ['Marketing', 'Entrepreneurial Management'],
-    faculty: ['Sunil Gupta', 'Rajiv Lal'],
-    term: 'Spring 2027',
-    credits: 1.5,
-    assessment: 'Paper',
-    popular: false,
-  },
-  {
-    id: '8c6f3e74-2a9d-4b15-c397-6e1f8a3d9c52',
-    number: '6454',
-    title: 'Field Course: Public Markets Investing Seminar',
-    units: ['Finance'],
-    faculty: ['Daniel Leventhal'],
-    term: 'Spring 2027',
-    credits: 3.0,
-    assessment: 'Project',
-    popular: false,
-  },
 ]
+
+export const COURSES = [...FALL_2026_COURSES, ...SPRING_2027_COURSES]
 
 // Canonical unit list for filtering
 export const UNITS = [
@@ -1403,7 +869,7 @@ export const UNITS = [
 //   qTerm:     'Q1' | 'Q2' | 'Q1Q2'
 //   faculty:   short instructor name(s)
 // Source: official HBS EC Fall 2026 timetable (updated 6.25.26)
-export const COURSE_SECTIONS = {
+const FALL_2026_SECTIONS = {
   // ── Single-section X day courses ────────────────────────────────────────────
   '85e66038': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Sebenius' }],          // Advanced Negotiation
   '45817284': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Van Bever' }],         // Building & Sustaining Enterprise
@@ -1558,103 +1024,9 @@ export const COURSE_SECTIONS = {
     { section: '01', dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Malhotra' },
     { section: '02', dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Mohan' },
   ],
-
-  // ── Spring 2027 courses ─────────────────────────────────────────────────────
-  // Time slots inferred from Spring 2026 catalog screenshots (used as proxy for
-  // Spring 2027). Day-type (X/Y/W) is best-guess: most slots default to X day
-  // (rotating Mon/Tue); 3:10-5:10 seminars default to W day (Wed). Refine when
-  // the official Spring 2027 timetable is published. qTerm: S1, S2, S1S2.
-
-  // Spring X-day 8:30-9:50
-  '82681870': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'S1S2', faculty: 'Kaufman; Pforzheimer' }],  // 1564 Restaurant Industry
-  'ebedf80e': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'S1S2', faculty: 'Lietz' }],                 // 1484 Real Estate PE
-  '993b2798': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'S1S2', faculty: 'Koning' }],                // 1257 Strategy for Entrepreneurs
-  'b9f7e2a1': [{ section: null, dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'S1',   faculty: 'Friedman' }],              // 1155 Business and Geopolitics
-
-  // Spring X-day 10:10-11:30
-  'b33ecb09': [{ section: null, dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1',   faculty: 'Angelini' }],              // 1475 Real Estate Investing
-  '27577ad6': [{ section: null, dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1',   faculty: 'Kluender' }],              // 1625 Entrep Finance (Spring)
-  '2a8c4e75': [{ section: null, dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1',   faculty: 'Lal' }],                   // 1921 AI-Driven Marketing
-
-  // Spring X-day 11:50-1:10
-  'c3a7d1df': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Herzlinger; Creo' }],      // 6340 FC: Adv BP Healthcare
-  '8cba66cb': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Hussam' }],                // 1151 Globalization & Emerging Markets
-  '50f42be2': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Gompers' }],               // 1631 Global Entrepreneurship
-  '5b6e2c47': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Srinivasan' }],            // 2010 Corporate Governance
-  '9a2c8e13': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S2',   faculty: 'Iyoha' }],                 // 1645 Launching Global Ventures
-
-  // Spring X-day 1:30-2:50
-  'd5d828b1': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'Baron' }],                 // 1235 OWN
-  '72ffc0d0': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'Weinzierl' }],             // 1177 SPACE
-  '7e57f029': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1',   faculty: 'Huckman; Gallani' }],      // 2195 Transforming Health Care
-  '5e7d49b5': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S2',   faculty: 'Tingley' }],               // 1105 Energy
-  '15a51b39': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S2',   faculty: 'Shipley' }],               // 1695 Entrep Sales 102
-  '9a1da3c4': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1S2', faculty: 'Amano' }],                 // 1955 Innovation and Renovation
-
-  // Spring extended slot 1:30-3:30 (Deals-style)
-  'a7d92511': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-15:30', qTerm: 'S1S2', faculty: 'Subramanian' }],           // 2267 Deals (Spring)
-
-  // Spring multi-section X-day
-  'df94eb75': [ // 2090 Authentic Leader Development
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Ely' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S1S2', faculty: 'Burns' },
-  ],
-  '9f6772cb': [ // 1420 Creating Value Through Corporate Restructuring
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Gilson' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Gilson' },
-  ],
-  '1440b3ee': [ // 2031 Leadership Execution and Action Planning
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Raffaelli' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Raffaelli' },
-  ],
-  '891a2a94': [ // 1556 Making Difficult Decisions
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Edmondson' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Zuzul' },
-  ],
-  '131a07d6': [ // 1788 Scaling Technology Ventures
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Rayport' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Rayport' },
-  ],
-  'f777d9ea': [ // 1122 The Coming of Managerial Capitalism
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'S1S2', faculty: 'Nicholas' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Nicholas' },
-  ],
-  '97c68398': [ // 1727 Tough Tech Ventures
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1S2', faculty: 'Krieger' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1S2', faculty: 'Krieger' },
-  ],
-  '88c4f3b2': [ // 1885 Leadership and Happiness
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '08:30-09:50', qTerm: 'S1', faculty: 'Brooks' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1', faculty: 'Brooks' },
-  ],
-  '5201a574': [ // 1425 Investment Strategies
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'S2', faculty: 'Vrattos' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S2', faculty: 'Vrattos' },
-  ],
-  'f3a91b46': [ // 1418 Strategies for Value Creation — Abridged
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1', faculty: 'Mayfield' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '10:10-11:30', qTerm: 'S1', faculty: 'Mayfield' },
-  ],
-  'e58a7d34': [ // 1507 Building and Sustaining a Successful Enterprise Intensive
-    { section: '01', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S1', faculty: 'Shih' },
-    { section: '02', dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'S2', faculty: 'Shih' },
-  ],
-
-  // Spring Wednesday seminars (3:10-5:10)
-  'dfe57052': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'Moss' }],                  // 1160 Modern Financial System
-  '3b6d720e': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'Deshpande; McGee' }],      // 6913 FC: Business of the Arts
-  '37529849': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'R. Cohen' }],              // 6334 FC: Field Y
-  'eaf694dc': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'Dionne' }],                // 6440 FC: PE Projects
-  'e88f7aa9': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'Pananos' }],               // 6453 FC: Value Creation SM Firms
-  'd2a4c891': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'Shipley' }],               // 6665 FC: Entrep Sales 103
-  '8c6f3e74': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'S1S2', faculty: 'Leventhal' }],             // 6454 FC: Public Markets Investing
-
-  // Spring late-day specials
-  'ea3604b0': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '16:00-18:00', qTerm: 'S1S2', faculty: 'Wilcox; MacCormack' }],    // 5242 Launch Lab/Capstone 2
-  'aa2e3eba': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '14:10-17:10', qTerm: 'S1S2', faculty: 'Cullen' }],                // 1731 Navigating Your Worth
-  '7d3e9a18': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '14:10-17:10', qTerm: 'S1S2', faculty: 'Satchu' }],                // 1607 Founder Launch
-  '4c8b2f96': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-16:30', qTerm: 'S1S2', faculty: 'Satchu' }],                // 1608 AI Systems & Bayesian Strategy
 }
+
+export const COURSE_SECTIONS = { ...FALL_2026_SECTIONS, ...SPRING_2027_SECTIONS }
 
 // ── Section helpers ──────────────────────────────────────────────────────────
 // Courses are looked up by 8-char prefix of their UUID.

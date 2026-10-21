@@ -9,9 +9,10 @@ import AcademicCalendar from './pages/AcademicCalendar'
 import Guide from './pages/Guide'
 import RankingView from './pages/RankingView'
 import PowerRankings from './pages/PowerRankings'
+import SuggestView from './pages/SuggestView'
 import WelcomeTour from './components/WelcomeTour'
 import { nextHardDeadline } from './data/ecDeadlines'
-import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock, Trophy } from 'lucide-react'
+import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock, Trophy, Sparkles } from 'lucide-react'
 
 const LINKS = [
   { to: '/courses',  label: 'Courses',   Icon: BookOpen },
@@ -19,6 +20,7 @@ const LINKS = [
   { to: '/builds',   label: 'My Builds', Icon: BookMarked },
   { to: '/ranking',  label: 'Ranking',   Icon: ListOrdered },
   { to: '/schedule', label: 'Schedule',  Icon: CalendarDays },
+  { to: '/suggest',  label: 'Suggest',   Icon: Sparkles },
   { to: '/compare',  label: 'Compare',   Icon: GitCompareArrows },
   { to: '/calendar', label: 'Calendar',  Icon: CalendarRange },
   { to: '/guide',    label: 'Guide',     Icon: Compass },
@@ -79,6 +81,7 @@ export default function App() {
         <Route path="/guide" element={<Guide />} />
         <Route path="/ranking" element={<RankingView {...courseBuildsHook} />} />
         <Route path="/power" element={<PowerRankings />} />
+        <Route path="/suggest" element={<SuggestView {...courseBuildsHook} />} />
       </Routes>
     </BrowserRouter>
   )

@@ -2,10 +2,11 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUp, ArrowDown, X, Copy, Check, Inbox, GripVertical, Info } from 'lucide-react'
 import { COURSES, getCourseSections } from '../data/hbsCourses'
+import { REGISTRATION_TERM, rankingWindow } from '../data/ecDeadlines'
 
-// Schedule Scout prep: drag (or tap) your build's Fall courses into the four
-// preference buckets, order them, then mirror the list into Schedule Scout
-// when the ranking window opens (Jul 27 – Aug 10).
+// Schedule Scout prep: drag (or tap) your build's courses for the current
+// registration term into the four preference buckets, order them, then mirror
+// the list into Schedule Scout when the ranking window opens.
 
 const BUCKETS = [
   { key: 'favorite',   label: 'Favorite',   cls: 'favorite',   hint: 'Would be thrilled' },
@@ -16,7 +17,7 @@ const BUCKETS = [
 const EMPTY_RANKING = { favorite: [], great: [], good: [], acceptable: [] }
 const BY_ID = new Map(COURSES.map(c => [c.id, c]))
 
-// Clamp a stored ranking to ids that are still in the build & still Fall courses
+// Clamp a stored ranking to ids that are still in the build & still in the term
 function normalizeRanking(ranking, validIds) {
   const r = ranking ?? EMPTY_RANKING
   const out = {}
@@ -58,17 +59,18 @@ export default function RankingView({ builds, setBuildRanking }) {
   const [dragId, setDragId] = useState(null)
 
   const build = builds.find(b => b.id === buildId) ?? builds[0]
+  const win = rankingWindow()
 
-  // Scout registration is for Fall — only rank the build's Fall 2026 courses
-  const fallCourses = useMemo(() => {
+  // Scout registration is per term — only rank the build's courses in that term
+  const termCourses = useMemo(() => {
     if (!build) return []
-    return build.courseIds.map(id => BY_ID.get(id)).filter(c => c && c.term === 'Fall 2026')
+    return build.courseIds.map(id => BY_ID.get(id)).filter(c => c && c.term === REGISTRATION_TERM)
   }, [build])
 
-  const fallIds = useMemo(() => new Set(fallCourses.map(c => c.id)), [fallCourses])
-  const ranking = useMemo(() => normalizeRanking(build?.ranking, fallIds), [build, fallIds])
+  const termIds = useMemo(() => new Set(termCourses.map(c => c.id)), [termCourses])
+  const ranking = useMemo(() => normalizeRanking(build?.rankings?.[REGISTRATION_TERM], termIds), [build, termIds])
   const rankedIds = useMemo(() => new Set(BUCKETS.flatMap(b => ranking[b.key])), [ranking])
-  const unranked = fallCourses.filter(c => !rankedIds.has(c.id))
+  const unranked = termCourses.filter(c => !rankedIds.has(c.id))
 
   // Overall rank number: position across buckets in Favorite→Acceptable order
   const overallRank = useMemo(() => {
@@ -81,7 +83,7 @@ export default function RankingView({ builds, setBuildRanking }) {
   const rankedCredits = BUCKETS.flatMap(b => ranking[b.key])
     .reduce((sum, id) => sum + (BY_ID.get(id)?.credits ?? 0), 0)
 
-  const save = (next) => setBuildRanking(build.id, next)
+  const save = (next) => setBuildRanking(build.id, REGISTRATION_TERM, next)
 
   // Remove from wherever it is, then insert into `bucketKey` at `index` (end if omitted)
   const assign = (courseId, bucketKey, index = null) => {
@@ -134,7 +136,7 @@ export default function RankingView({ builds, setBuildRanking }) {
   }
 
   const copyRanking = () => {
-    const lines = [`Schedule Scout ranking — ${build.name} (Fall 2026)`, '']
+    const lines = [`Schedule Scout ranking — ${build.name} (${REGISTRATION_TERM})`, '']
     for (const b of BUCKETS) {
       if (ranking[b.key].length === 0) continue
       lines.push(b.label.toUpperCase())
@@ -169,10 +171,12 @@ export default function RankingView({ builds, setBuildRanking }) {
           <div>
             <h1 className="page-head__title">The Scout <em>Ranking</em></h1>
             <p className="page-head__sub">
-              Order your Fall courses into Schedule Scout's four buckets, then mirror the list when the ranking window opens July 27.
+              Order your {REGISTRATION_TERM} courses into Schedule Scout's four buckets, then mirror the list when the ranking window opens{win?.open ? ` ${win.open.d}` : ''}.
             </p>
           </div>
-          <div className="page-head__meta">Ranking closes Aug 10 · 6 PM</div>
+          <div className="page-head__meta">
+            {win?.close ? `Ranking closes ${win.close.d}${win.close.t ? ` · ${win.close.t}` : ''}` : 'Ranking dates not posted yet'}
+          </div>
         </div>
         <div className="rule rule--soft" />
 
@@ -251,7 +255,7 @@ export default function RankingView({ builds, setBuildRanking }) {
         </div>
 
         <p className="cal-fineprint">
-          Fall 2026 courses only — Spring registration runs separately later in the year · Order within a bucket matters
+          {REGISTRATION_TERM} courses only — each term is ranked separately · Order within a bucket matters
         </p>
       </div>
     </div>

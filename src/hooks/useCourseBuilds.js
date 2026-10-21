@@ -5,9 +5,14 @@ const STORAGE_KEY = 'hbs_course_builds'
 const SYNC_CODE_KEY = 'hbs_sync_code'
 const DEFAULT_BUILD = { id: 'wishlist', name: 'My Wishlist', createdAt: new Date().toISOString(), courseIds: [], sections: {}, notes: {}, colors: {} }
 
-// Migrate old builds that don't have `sections`, `notes`, `colors`, or `ranking` fields
+// Migrate old builds that don't have `sections`, `notes`, `colors`, or `rankings`
+// fields. Rankings are per registration term; the old single `ranking` was Fall 2026.
 function migrateBuilds(builds) {
-  return builds.map(b => ({ ...b, sections: b.sections ?? {}, notes: b.notes ?? {}, colors: b.colors ?? {}, ranking: b.ranking ?? null }))
+  return builds.map(({ ranking, ...b }) => ({
+    ...b,
+    sections: b.sections ?? {}, notes: b.notes ?? {}, colors: b.colors ?? {},
+    rankings: b.rankings ?? (ranking ? { 'Fall 2026': ranking } : {}),
+  }))
 }
 
 function generateCode() {
@@ -139,16 +144,16 @@ export function useCourseBuilds() {
       const { [courseId]: _s, ...sectionsRest } = b.sections ?? {}
       const { [courseId]: _n, ...notesRest    } = b.notes    ?? {}
       const { [courseId]: _c, ...colorsRest   } = b.colors   ?? {}
-      const ranking = b.ranking
-        ? Object.fromEntries(Object.entries(b.ranking).map(([k, ids]) => [k, ids.filter(id => id !== courseId)]))
-        : null
+      const rankings = Object.fromEntries(Object.entries(b.rankings ?? {}).map(([term, r]) => [
+        term, Object.fromEntries(Object.entries(r).map(([k, ids]) => [k, ids.filter(id => id !== courseId)])),
+      ]))
       return {
         ...b,
         courseIds: b.courseIds.filter(id => id !== courseId),
         sections: sectionsRest,
         notes:    notesRest,
         colors:   colorsRest,
-        ranking,
+        rankings,
       }
     }))
   }, [update])
@@ -176,10 +181,26 @@ export function useCourseBuilds() {
     }))
   }, [update])
 
-  // Schedule Scout ranking buckets for a build:
+  // Schedule Scout ranking buckets for a build in one registration term:
   // { favorite: [courseId...], great: [...], good: [...], acceptable: [...] }
-  const setBuildRanking = useCallback((buildId, ranking) => {
-    update(prev => prev.map(b => b.id === buildId ? { ...b, ranking } : b))
+  const setBuildRanking = useCallback((buildId, term, ranking) => {
+    update(prev => prev.map(b => b.id === buildId ? { ...b, rankings: { ...(b.rankings ?? {}), [term]: ranking } } : b))
+  }, [update])
+
+  // Save a generated schedule as a new build: { name, courseIds, sections }
+  const createBuildFrom = useCallback(({ name, courseIds, sections }) => {
+    const build = {
+      id: `build_${Date.now()}`,
+      name: name.trim() || 'Suggested schedule',
+      createdAt: new Date().toISOString(),
+      courseIds: [...courseIds],
+      sections: { ...sections },
+      notes: {},
+      colors: {},
+      rankings: {},
+    }
+    update(prev => [...prev, build])
+    return build.id
   }, [update])
 
   // Per-course free-text note in a build (e.g. "must-take", "backup", "heard great things")
@@ -199,7 +220,7 @@ export function useCourseBuilds() {
 
   return {
     builds, syncCode, syncStatus, linkDevice,
-    createBuild, deleteBuild, renameBuild,
+    createBuild, createBuildFrom, deleteBuild, renameBuild,
     addToBuild, removeFromBuild, setBuildSection, setBuildNote, setBuildCourseColor, setBuildRanking,
     isInAnyBuild, getBuildIdsForCourse,
   }

@@ -66,19 +66,26 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid course number' })
   }
 
-  try {
-    // 1. Search by course number.
-    const search = await fosePost('search', {
-      other: { srcdb: '' },
-      criteria: [{ field: 'keyword', value: String(number) }],
-    })
+  // Optional term code (e.g. 792154 = 2027 Spring). Blank = the catalog's current term.
+  const srcdbParam = /^\d+$/.test(String(req.query.srcdb ?? '')) ? String(req.query.srcdb) : ''
 
-    const results = Array.isArray(search?.results) ? search.results : []
-    // Match the result whose code ends with the exact course number
-    // (e.g. "3 TECH 1632" -> 1632), so a substring hit can't win.
+  try {
+    // 1. Search by course number — in the requested term first, then the
+    // current term as a fallback. Match the result whose code ends with the
+    // exact course number (e.g. "3 TECH 1632" -> 1632), so a substring hit
+    // can't win; prefer a live section over a cancelled one.
     const numRe = new RegExp(`(^|\\s)${number}$`)
-    const hit =
-      results.find(r => numRe.test(String(r.code || '').trim())) || results[0]
+    let search, hit
+    for (const srcdb of srcdbParam ? [srcdbParam, ''] : ['']) {
+      search = await fosePost('search', {
+        other: { srcdb },
+        criteria: [{ field: 'keyword', value: String(number) }],
+      })
+      const results = Array.isArray(search?.results) ? search.results : []
+      const exact = results.filter(r => numRe.test(String(r.code || '').trim()))
+      hit = exact.find(r => !r.isCancelled) || exact[0]
+      if (hit) break
+    }
 
     if (!hit) {
       return res.status(404).json({ error: 'Course not found on HBS catalog' })

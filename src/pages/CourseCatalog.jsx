@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Search, Plus, Check, Bookmark, X, Repeat, Calendar, SlidersHorizontal, ChevronDown, Flame, SearchX, Star, Clock3, Sparkles } from 'lucide-react'
 import { COURSES, UNITS, getCourseSections } from '../data/hbsCourses'
 import { getCourseEval } from '../data/courseEvals'
+import { REGISTRATION_TERM } from '../data/ecDeadlines'
 
 // Re-export the canonical scheduleLabel from the data layer (backwards compat)
 export { scheduleLabel } from '../data/hbsCourses'
@@ -297,7 +298,8 @@ function FilterRow({ st }) {
 export default function CourseCatalog({ builds, addToBuild, getBuildIdsForCourse, createBuild }) {
   const [search, setSearch] = useState('')
   const [unit, setUnit] = useState('All units')
-  const [term, setTerm] = useState('All terms')
+  // Open on the term students are registering for; shows as a removable chip
+  const [term, setTerm] = useState(REGISTRATION_TERM)
   const [credits, setCredits] = useState('Any credits')
   const [dayFilter, setDayFilter] = useState('All')
   const [assess, setAssess] = useState(new Set())

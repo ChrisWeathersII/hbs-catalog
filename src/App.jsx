@@ -12,11 +12,10 @@ import PowerRankings from './pages/PowerRankings'
 import SuggestView from './pages/SuggestView'
 import WelcomeTour from './components/WelcomeTour'
 import { nextHardDeadline } from './data/ecDeadlines'
-import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock, Trophy, Sparkles } from 'lucide-react'
+import { BookOpen, BookMarked, CalendarDays, GitCompareArrows, CalendarRange, Compass, ListOrdered, Clock, Sparkles } from 'lucide-react'
 
 const LINKS = [
   { to: '/courses',  label: 'Courses',   Icon: BookOpen },
-  { to: '/power',    label: 'Power Rankings', Icon: Trophy },
   { to: '/builds',   label: 'My Builds', Icon: BookMarked },
   { to: '/ranking',  label: 'Ranking',   Icon: ListOrdered },
   { to: '/schedule', label: 'Schedule',  Icon: CalendarDays },
@@ -80,6 +79,8 @@ export default function App() {
         <Route path="/calendar" element={<AcademicCalendar />} />
         <Route path="/guide" element={<Guide />} />
         <Route path="/ranking" element={<RankingView {...courseBuildsHook} />} />
+        {/* Out of the nav for Spring: evals only cover Fall courses (6 of 56
+            Spring courses rated). Still reachable by URL. */}
         <Route path="/power" element={<PowerRankings />} />
         <Route path="/suggest" element={<SuggestView {...courseBuildsHook} />} />
       </Routes>

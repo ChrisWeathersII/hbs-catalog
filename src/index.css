@@ -973,7 +973,7 @@ a{ color:inherit; text-decoration:none; }
 /* ============================================================================
    SUGGEST — schedule suggester
    ========================================================================== */
-/* Nine nav items: drop labels between phone and wide desktop so nothing wraps */
+/* Eight nav items + deadline pill: drop labels between phone and wide desktop so nothing wraps */
 @media (min-width:769px) and (max-width:1180px){
   .nav__link span{ display:none; }
   .nav__link{ padding:0 11px; }

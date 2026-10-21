@@ -2,6 +2,14 @@ import { useState, useRef, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ExternalLink, Bookmark, Check, Plus, Loader, Clock, BarChart3, Sparkles } from 'lucide-react'
 import { COURSES, getCourseSections, scheduleLabel, TERM_SRCDB } from '../data/hbsCourses'
+
+// Deep link into HBS's catalog app (coursecatalog.mba.hbs.edu), opening this
+// course's details in its own term. The old www.hbs.edu/coursecatalog/N.html
+// pages now just redirect to the catalog's home page.
+const hbsCatalogUrl = (course) => {
+  const srcdb = TERM_SRCDB[course.term]
+  return `https://coursecatalog.mba.hbs.edu/?details${srcdb ? `&srcdb=${srcdb}` : ''}&keyword=${course.number}`
+}
 import { getCourseEval } from '../data/courseEvals'
 
 const DAY_COLOR = { X: '#1d4ed8', Y: '#15803d', W: '#b45309' }
@@ -426,7 +434,7 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
           {course.faculty.join(', ')}
         </div>
 
-        <a href={`https://www.hbs.edu/coursecatalog/${course.number}.html`}
+        <a href={hbsCatalogUrl(course)}
           target="_blank" rel="noopener noreferrer"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
@@ -461,7 +469,7 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
               </div>
             ) : error ? (
               <div style={{ color: '#9ca3af', fontSize: '0.875rem' }}>
-                Description unavailable. <a href={`https://www.hbs.edu/coursecatalog/${course.number}.html`} target="_blank" rel="noopener noreferrer" style={{ color: '#A41034' }}>View on HBS catalog →</a>
+                Description unavailable. <a href={hbsCatalogUrl(course)} target="_blank" rel="noopener noreferrer" style={{ color: '#A41034' }}>View on HBS catalog →</a>
               </div>
             ) : desc?.paragraphs?.length ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
@@ -471,7 +479,7 @@ export default function CourseDetail({ builds, addToBuild, getBuildIdsForCourse,
               </div>
             ) : (
               <div style={{ color: '#9ca3af', fontSize: '0.875rem' }}>
-                No description found. <a href={`https://www.hbs.edu/coursecatalog/${course.number}.html`} target="_blank" rel="noopener noreferrer" style={{ color: '#A41034' }}>View on HBS catalog →</a>
+                No description found. <a href={hbsCatalogUrl(course)} target="_blank" rel="noopener noreferrer" style={{ color: '#A41034' }}>View on HBS catalog →</a>
               </div>
             )}
           </div>

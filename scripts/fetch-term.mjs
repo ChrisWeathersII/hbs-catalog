@@ -194,23 +194,29 @@ for (const [number, secs] of [...byCourse].sort((a, b) => a[1][0].row.title.loca
     const meets = parseMeetings(x.d.meeting_html)
     if (meets.length === 0) { warnings.push(`${number} §${x.row.no}: schedule pending`); continue }
     // The regular pattern is the X (MT) / Y (ThF) block when there is one; the
-    // other meets are swap days. Otherwise, a once-weekly course: longest span.
-    const primary = meets.find(m => m.days === 'MT' || m.days === 'ThF') ?? meets.reduce((a, b) => (b.span > a.span ? b : a))
-    const pat = PATTERN[primary.days]
-    if (!pat) { warnings.push(`${number} §${x.row.no}: unmapped day pattern "${primary.days}"`); continue }
+    // other meets are swap days. Otherwise it's a weekly seminar on one or more
+    // single days (e.g. Mon + Wed): keep every meet that runs most of the term.
+    const block = meets.find(m => m.days === 'MT' || m.days === 'ThF')
+    const maxSpan = Math.max(...meets.map(m => m.span))
+    const regular = block ? [block] : meets.filter(m => m.span >= maxSpan / 2)
     const qTerm = QTERM[strip(x.d.session_html)]
     if (!qTerm) warnings.push(`${number} §${x.row.no}: unknown session "${strip(x.d.session_html)}"`)
-    const sec = {
-      section: multi ? x.row.no : null,
-      ...pat,
-      timeSlot: `${primary.start}-${primary.end}`,
-      qTerm: qTerm ?? (SPRING ? 'S1S2' : 'Q1Q2'),
-      faculty: x.row.instr.split(/[;,]\s*/).map(n => n.replace(/^[A-Z]\.\s*/, '')).join('; '),
+    const extra = [...new Set(meets.filter(m => !regular.includes(m)).map(m => m.days))]
+    for (const m of regular) {
+      const pat = PATTERN[m.days]
+      if (!pat) { warnings.push(`${number} §${x.row.no}: unmapped day pattern "${m.days}"`); continue }
+      const sec = {
+        section: multi ? x.row.no : null,
+        ...pat,
+        timeSlot: `${m.start}-${m.end}`,
+        qTerm: qTerm ?? (SPRING ? 'S1S2' : 'Q1Q2'),
+        // sorted: the API returns co-instructors in varying order between calls
+        faculty: x.row.instr.split(/\s*[;,/]\s*/).map(n => n.replace(/^[A-Z]\.\s*/, '')).sort().join('; '),
+      }
+      // Swap/make-up sessions on other weekdays (e.g. the occasional Wednesday)
+      if (extra.length) sec.extraDays = extra
+      out.push(sec)
     }
-    // Swap/make-up sessions on other weekdays (e.g. the occasional Wednesday)
-    const extra = [...new Set(meets.filter(m => m !== primary).map(m => m.days))]
-    if (extra.length) sec.extraDays = extra
-    out.push(sec)
   }
   if (out.length) courseSections[id.slice(0, 8)] = out
 }

@@ -895,7 +895,7 @@ const FALL_2026_SECTIONS = {
   'f59a3258': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q1Q2', faculty: 'Weiss' }],             // Public Entrepreneurship
   '772ec662': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-15:30', qTerm: 'Q2',   faculty: 'Subramanian' }],       // Q2: Deals
   '4896291a': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q1',   faculty: 'Creo; Herzlinger' }],  // Q1: Innovating in Healthcare (moved from Y day in 6.25.26 update)
-  '65c49a3c': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Creo; Herzlinger' }],  // Q2: FC: Innovating in Healthcare (moved from Y day in 6.25.26 update)
+  '65c49a3c': [{ section: null, dayType: 'X', weekday: null, timeSlot: '11:50-13:10', qTerm: 'Q2',   faculty: 'Creo; Herzlinger' }],  // Q2: FC: Innovating in Healthcare (11:50 per catalog API, 10.21.26)
   '4ab8a95a': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Bertotti' }],          // Q2: Arts of Communication (was Y/Q1; X day Q2 per 6.25.26 update)
   '5a461398': [{ section: null, dayType: 'X', weekday: null, timeSlot: '13:30-14:50', qTerm: 'Q2',   faculty: 'Shipley; Boyajian' }], // Q2: B2B Sales and Distribution (Fall per 6.25.26 update)
   // ── Single-section X weekly Tue ─────────────────────────────────────────────
@@ -974,10 +974,7 @@ const FALL_2026_SECTIONS = {
   '4e72d08b': [{ section: null, dayType: 'Y', weekday: 'THU', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Khanna; Zelleke' }],   // IFC: Saudi Arabia
 
   // ── Multi-section Y day courses ─────────────────────────────────────────────
-  'c403f8f6': [ // Entrepreneurship & Global Capitalism
-    { section: '01', dayType: 'Y', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'G. Jones' },
-    { section: '02', dayType: 'Y', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'G. Jones' },
-  ],
+  'c403f8f6': [{ section: null, dayType: 'Y', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'G. Jones' }], // Entrepreneurship & Global Capitalism (§02 cancelled per catalog API, 10.21.26)
   '34e64e6d': [ // Financial Management of Smaller Firms
     { section: '01', dayType: 'Y', weekday: null, timeSlot: '08:30-09:50', qTerm: 'Q1Q2', faculty: 'Ruback; Yudkoff' },
     { section: '02', dayType: 'Y', weekday: null, timeSlot: '10:10-11:30', qTerm: 'Q1Q2', faculty: 'Ruback; Yudkoff' },
@@ -1016,7 +1013,7 @@ const FALL_2026_SECTIONS = {
   ],
 
   // ── Wednesday-specific courses ───────────────────────────────────────────────
-  '70db20e6': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Tadikonda' }],         // FC: Life Sciences Venture Creation
+  '70db20e6': [{ section: null, dayType: 'X', weekday: 'TUE', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Tadikonda' }],         // FC: Life Sciences Venture Creation (Tue per catalog API, 10.21.26)
   'e6189e3f': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'L. Cohen' }],          // FC: Inside the Family Office
   'd77157c7': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1Q2', faculty: 'Fleiss' }],            // FC: Seminar in Investing
   '9c2d7f41': [{ section: null, dayType: 'W', weekday: 'WED', timeSlot: '15:10-17:10', qTerm: 'Q1',   faculty: 'White' }],             // Q1: Elections & Democracy (new in 6.25.26 update)

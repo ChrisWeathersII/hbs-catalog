@@ -920,7 +920,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "10:10-11:30",
       "qTerm": "S1S2",
-      "faculty": "Kaufman/Pforzheimer",
+      "faculty": "Kaufman; Pforzheimer",
       "extraDays": [
         "T",
         "W"
@@ -976,7 +976,7 @@ export const TERM_SECTIONS = {
       "weekday": "WED",
       "timeSlot": "15:10-17:10",
       "qTerm": "S1S2",
-      "faculty": "Rangan/Rigol"
+      "faculty": "Rangan; Rigol"
     }
   ],
   "042b667f": [
@@ -1117,7 +1117,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "10:10-11:30",
       "qTerm": "S1",
-      "faculty": "DiDonna/Boyajian",
+      "faculty": "Boyajian; DiDonna",
       "extraDays": [
         "T",
         "W"
@@ -1129,7 +1129,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "11:50-13:10",
       "qTerm": "S1",
-      "faculty": "Shipley/Roberge",
+      "faculty": "Roberge; Shipley",
       "extraDays": [
         "T",
         "W"
@@ -1141,7 +1141,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "13:30-14:50",
       "qTerm": "S1",
-      "faculty": "Shipley/Roberge",
+      "faculty": "Roberge; Shipley",
       "extraDays": [
         "T",
         "W"
@@ -1168,7 +1168,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "11:50-13:10",
       "qTerm": "S1S2",
-      "faculty": "Creo/Herzlinger",
+      "faculty": "Creo; Herzlinger",
       "extraDays": [
         "Th",
         "W"
@@ -1182,7 +1182,7 @@ export const TERM_SECTIONS = {
       "weekday": "TUE",
       "timeSlot": "15:10-17:10",
       "qTerm": "S1S2",
-      "faculty": "Deshpande/McGee"
+      "faculty": "Deshpande; McGee"
     }
   ],
   "d2a4c891": [
@@ -1202,7 +1202,7 @@ export const TERM_SECTIONS = {
       "weekday": "THU",
       "timeSlot": "15:10-17:10",
       "qTerm": "S1S2",
-      "faculty": "Ruback/Yudkoff"
+      "faculty": "Ruback; Yudkoff"
     }
   ],
   "eaf694dc": [
@@ -1329,7 +1329,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "11:50-13:10",
       "qTerm": "S1S2",
-      "faculty": "Vrattos/Sammon",
+      "faculty": "Sammon; Vrattos",
       "extraDays": [
         "Th",
         "W"
@@ -1341,7 +1341,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "13:30-14:50",
       "qTerm": "S1S2",
-      "faculty": "Sammon/Vrattos",
+      "faculty": "Sammon; Vrattos",
       "extraDays": [
         "Th",
         "W"
@@ -1355,7 +1355,7 @@ export const TERM_SECTIONS = {
       "weekday": "MON",
       "timeSlot": "16:00-18:00",
       "qTerm": "S1S2",
-      "faculty": "Wilcox/MacCormack"
+      "faculty": "MacCormack; Wilcox"
     }
   ],
   "bc960f8b": [
@@ -1418,7 +1418,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "08:30-09:50",
       "qTerm": "S2",
-      "faculty": "Cavallo/Di Tella",
+      "faculty": "Cavallo; Di Tella",
       "extraDays": [
         "W"
       ]
@@ -1429,7 +1429,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "10:10-11:30",
       "qTerm": "S2",
-      "faculty": "Cavallo/Di Tella",
+      "faculty": "Cavallo; Di Tella",
       "extraDays": [
         "W"
       ]
@@ -1578,7 +1578,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "13:30-14:50",
       "qTerm": "S2",
-      "faculty": "Kelly/Angelini",
+      "faculty": "Angelini; Kelly",
       "extraDays": [
         "W"
       ]
@@ -1789,7 +1789,7 @@ export const TERM_SECTIONS = {
       "weekday": null,
       "timeSlot": "13:30-14:50",
       "qTerm": "S1",
-      "faculty": "Gallani/Huckman",
+      "faculty": "Gallani; Huckman",
       "extraDays": [
         "Th",
         "W"

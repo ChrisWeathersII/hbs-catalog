@@ -287,6 +287,9 @@ a{ color:inherit; text-decoration:none; }
   transition:transform var(--med) var(--ease), box-shadow var(--med) var(--ease), border-color var(--med) var(--ease);
 }
 .card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:var(--crimson-200); }
+/* hover transform traps the save menu in the card's stacking context; lift the
+   card with an open menu over its neighbors (below the sticky bars) */
+.card:has(.menu){ z-index:5; }
 
 .card__top{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
 .card__tags{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-width:0; }

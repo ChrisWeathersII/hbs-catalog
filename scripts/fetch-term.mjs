@@ -198,10 +198,16 @@ for (const [number, secs] of [...byCourse].sort((a, b) => a[1][0].row.title.loca
     // single days (e.g. Mon + Wed): keep every meet that runs most of the term.
     const block = meets.find(m => m.days === 'MT' || m.days === 'ThF')
     const maxSpan = Math.max(...meets.map(m => m.span))
-    const regular = block ? [block] : meets.filter(m => m.span >= maxSpan / 2)
+    // Only single dates (e.g. Capstone's one all-day Monday): not a weekly slot
+    if (!block && maxSpan === 0) { warnings.push(`${number} §${x.row.no}: one-off session(s) only, no weekly schedule`); continue }
+    // Two meets on the same day (e.g. ALD's 1:30 class + 5:30 evening session):
+    // keep the earliest; the app has one slot per day and evenings never clash
+    const regular = (block ? [block] : meets.filter(m => m.span >= maxSpan / 2))
+      .sort((a, b) => a.start.localeCompare(b.start))
+      .filter((m, i, all) => all.findIndex(o => o.days === m.days) === i)
     const qTerm = QTERM[strip(x.d.session_html)]
     if (!qTerm) warnings.push(`${number} §${x.row.no}: unknown session "${strip(x.d.session_html)}"`)
-    const extra = [...new Set(meets.filter(m => !regular.includes(m)).map(m => m.days))]
+    const extra = [...new Set(meets.filter(m => !regular.some(r => r.days === m.days)).map(m => m.days))]
     for (const m of regular) {
       const pat = PATTERN[m.days]
       if (!pat) { warnings.push(`${number} §${x.row.no}: unmapped day pattern "${m.days}"`); continue }
